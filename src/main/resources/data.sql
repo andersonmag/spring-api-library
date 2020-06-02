@@ -59,7 +59,7 @@ para implantação de projetos web, desde pequenos sites até grandes aplicaçõ
 aplicações web! Neste livro será abordado temas fundamentais desde o funcionamento da web até a construção de conhecimentos básicos de
 programação para web como as linguagens HTML, JavaScript e CSS, passando por frameworks de front-end consolidados como JQuery e Bootstrap. 
 Foco total nos conhecimentos fundamentais de quem está começando na plataforma web.', 'Português', 
-'https://m.media-amazon.com/images/I/41Ocgq3quEL.jpg' , 'programacao-web-com-node-js-completo' , '10/09/2017', 3, '2020-06-02T17:08:52.233'),
+'https://images-americanas.b2w.io/produtos/01/00/img/1651615/0/1651615084_1GG.jpg' , 'programacao-web-com-node-js-completo' , '10/09/2017', 3, '2020-06-02T17:08:52.233'),
 
 (6, 'Arquitetura Limpa: O guia do artesão para estrutura e design de software', 'Robert C. Martin', 'Alta Books', 'As regras universais de 
 arquitetura de software aumentam dramaticamente a produtividade dos desenvolvedores ao longo da vida dos sistemas de software. Agora, 
@@ -68,7 +68,7 @@ vai revelar essas regras e ajudar o leitor a aplicá-las. A Arquitetura Limpa de
 Com base em meio século de experiência nos mais variados ambientes de software, Martin indica as escolhas que você deve fazer e explica
  por que elas são cruciais para o seu sucesso. Como já era esperado do Uncle Bob, este livro está cheio de soluções simples e diretas para os
   desafios reais que você enfrentará — aqueles que irão influenciar diretamente o sucesso ou fracasso dos seus projetos.', 'Português', 
-'https://m.media-amazon.com/images/I/41Zd8i94hwL.jpg' , 'arquitetura-limpa-o-guia-do-artesao-para-estrutura-e-design-de-software' , '25/03/2019', 3, '2020-06-02T17:08:52.233'),
+'https://images-americanas.b2w.io/produtos/01/00/img/73492/5/73492585_1GG.jpg' , 'arquitetura-limpa-o-guia-do-artesao-para-estrutura-e-design-de-software' , '25/03/2019', 3, '2020-06-02T17:08:52.233'),
 
 (7, 'Java e Programação Orientada a Objetos: Uma abordagem Didática', 'HELDER GUIMARÃES ARAGÃO', 'HELDER GUIMARÃES ARAGÃO', 
 'O entendimento da Programação Orientada a Objetos é um constante desafio para os estudantes e profissionais da área de Computação. 
@@ -76,7 +76,7 @@ Os estudantes, geralmente, têm dificuldade em entender as diferenças entre a p
  mesmo aqueles que possuem alguma experiência com desenvolvimento de software, também encontram dificuldades em modelar e desenvolver um 
  sistema orientado a objetos. Portanto, este livro pretende de forma didática, através de exemplos práticos, facilitar o entendimento dos
   principais conceitos do paradigma orientado a objetos por parte destes estudantes e profissionais.', 'Português',
-'https://m.media-amazon.com/images/I/51y24OqbRCL.jpg' , 'java-e-programacao-orientada-a-objetos-uma-abordagem-didatica' , '29/07/2013', 3, '2020-06-02T17:08:52.233'),
+'https://images-americanas.b2w.io/produtos/01/00/img/43481/2/43481208_1GG.jpg' , 'java-e-programacao-orientada-a-objetos-uma-abordagem-didatica' , '29/07/2013', 3, '2020-06-02T17:08:52.233'),
 
 (8, 'Matéria escura', 'Blake Crouch', 'Intrínseca', 
 'Essas são as últimas palavras que Jason Dessen ouve antes de acordar num laboratório, preso a uma maca. Raptado por um homem mascarado,
@@ -87,7 +87,7 @@ apenas um sonho? E, se esta não for a vida que ele sempre levou, como voltar pa
 Com ritmo veloz e muita ação, Matéria escura nos leva a um universo muito maior do que imaginamos, ao mesmo tempo em que comove ao colocar 
 em primeiro plano o amor pela família. Marcante e intimista, seus múltiplos cenários compõem uma história que aborda questões profundamente 
 humanas, como identidade, o peso das escolhas e até onde vamos para recuperar a vida com que sonhamos.', 'Português',
-'https://m.media-amazon.com/images/I/51w1jHLMlBL.jpg' , 'materia-escura' , '20/02/2017', 2, '2020-06-02T17:08:52.233'),
+'https://images-americanas.b2w.io/produtos/01/00/img/1486851/3/1486851357_1GG.jpg' , 'materia-escura' , '20/02/2017', 2, '2020-06-02T17:08:52.233'),
 
 (9, 'Interestelar', 'Jonathan Nolan', 'Gryphus Editora', 
 '"O FIM DA TERRA NÃO SERÁ O NOSSO FIM". Do aclamado cineasta Christopher Nolan, diretor de A origem (Inception) e da trilogia Batman – 
@@ -97,6 +97,6 @@ interestelar. Enquanto viajam, estão em risco o destino do planeta... Terra...e
 uma série de livros que o novo selo editorial GRYPHUS GEEK oferecerá a seus leitores. O selo será dedicado à publicação de obras de ficção
 que remetam ao universo geek a partir de filmes, seriados de televisão ou livros originais. Ao lançar os livros Supernatural,
 a Gryphus Editora constatou existir um amplo público formado por leitores jovens adultos, ávidos por novidades desse segmento.', 'Português',
-'https://m.media-amazon.com/images/I/514ChKFvfPL.jpg' , 'interestelar' , '17/03/2016', 2, '2020-06-02T17:08:52.233');
+'https://images-americanas.b2w.io/produtos/01/00/oferta/12682/3/12682322_1GG.jpg' , 'interestelar' , '17/03/2016', 2, '2020-06-02T17:08:52.233');
 
 
