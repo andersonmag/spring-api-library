@@ -1,6 +1,7 @@
 package com.api.library.model;
 
 import java.text.Normalizer;
+import java.time.LocalDateTime;
 // import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ public class Livro {
     private String ImagemURL;
     @OneToOne
     private Categoria categoria;
+    private LocalDateTime dataCriacao;
 
     public Long getId() {
         return id;
@@ -113,5 +115,13 @@ public class Livro {
 
     public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }
