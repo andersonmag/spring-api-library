@@ -40,12 +40,12 @@ public class LivroController {
     }
 
     @GetMapping(value = "/search/{link}")
-    public ResponseEntity<List<Livro>> ObterLivroPorLink(@PathVariable("link") String link) {
-        List<Livro> livros = livroRepository.findByLink(link);
+    public ResponseEntity<Livro> ObterLivroPorLink(@PathVariable("link") String link) {
+        Optional<Livro> livroOptional = livroRepository.findByLink(link);
 
-        if (livros.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(livros, HttpStatus.OK);
+        if (livroOptional.isPresent())
+            return new ResponseEntity<>(livroOptional.get(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(value = "/{id}")
