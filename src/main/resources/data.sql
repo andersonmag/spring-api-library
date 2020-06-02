@@ -87,7 +87,7 @@ apenas um sonho? E, se esta não for a vida que ele sempre levou, como voltar pa
 Com ritmo veloz e muita ação, Matéria escura nos leva a um universo muito maior do que imaginamos, ao mesmo tempo em que comove ao colocar 
 em primeiro plano o amor pela família. Marcante e intimista, seus múltiplos cenários compõem uma história que aborda questões profundamente 
 humanas, como identidade, o peso das escolhas e até onde vamos para recuperar a vida com que sonhamos.', 'Português',
-'https://m.media-amazon.com/images/I/51w1jHLMlBL.jpg' , 'materia-escura' , '20/02/2017', 2, '2020-06-02T17:08:52.233'),
+'https://images-americanas.b2w.io/produtos/01/00/img/1486851/3/1486851357_1GG.jpg' , 'materia-escura' , '20/02/2017', 2, '2020-06-02T17:08:52.233'),
 
 (9, 'Interestelar', 'Jonathan Nolan', 'Gryphus Editora', 
 '"O FIM DA TERRA NÃO SERÁ O NOSSO FIM". Do aclamado cineasta Christopher Nolan, diretor de A origem (Inception) e da trilogia Batman – 
