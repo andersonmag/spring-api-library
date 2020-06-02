@@ -1,5 +1,6 @@
 package com.api.library.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import com.api.library.model.Categoria;
@@ -70,6 +71,15 @@ public class LivroController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
+    @GetMapping(value = "/search/categorias/{link}")
+    public ResponseEntity<Categoria> ObterCategoriaPorLink(@PathVariable("link") String link) {
+        Optional<Categoria> categoriaOptional = categoriaRepository.findByLink(link);
+
+        if (categoriaOptional.isPresent())
+            return new ResponseEntity<>(categoriaOptional.get(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/categorias")
     public ResponseEntity<List<Categoria>> obterTodasAsCategorias() {
@@ -82,6 +92,7 @@ public class LivroController {
 
     @PostMapping
     public ResponseEntity<Livro> salvarLivro(@RequestBody Livro livro) {
+        livro.setDataCriacao(LocalDateTime.now());
         return new ResponseEntity<>(livroRepository.save(livro), HttpStatus.CREATED);
     }
 
