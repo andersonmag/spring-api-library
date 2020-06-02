@@ -1,5 +1,8 @@
 package com.api.library.model;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,6 +14,7 @@ public class Categoria {
     @GeneratedValue
     private Long id;
     private String nome;
+    private String link;
 
     public Long getId() {
         return id;
@@ -26,5 +30,15 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+    public void construirLink() {
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        this.link = pattern.matcher(Normalizer.normalize(this.nome, Normalizer.Form.NFD)).replaceAll("");
+        this.link = link.toLowerCase().replaceAll("[^a-zZ-Z1-9]", "-");
+        this.link = link.replaceAll("--", "-");
+    }
+
+    public String getLink() {
+        return link;
     }
 }

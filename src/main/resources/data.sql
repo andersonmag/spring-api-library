@@ -1,6 +1,6 @@
-INSERT INTO CATEGORIA(ID, NOME) VALUES(1, 'Holística Saúde, Boa Forma e Dieta'),
-                                      (2, 'Ficção científica'),
-                                      (3, 'Computação, Informática e Mídias Digitais');
+INSERT INTO CATEGORIA(ID, NOME, LINK) VALUES(1, 'Holística Saúde, Boa Forma e Dieta', 'holistica-saude-boa-forma-e-dieta'),
+                                      (2, 'Ficção científica','ficcao-cientifica'),
+                                      (3, 'Computação, Informática e Mídias Digitais','computacao-informatica-e-midias-digitais');
 
 INSERT INTO Livro(ID, TITULO, AUTOR , EDITORA, DESCRICAO, IDIOMA, IMAGEMURL, LINK, DATA_PUBLICACAO, CATEGORIA_ID) 
 VALUES(1, 'Você É A Sua Cura', 'Editora Alaúde', 'Deepak Chopra, Rudolph E. Tanzi' ,'Uma visão holística da medicina, de postura preventiva,
