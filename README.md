@@ -21,7 +21,7 @@ Projeto hospedado no [Heroku](https://library-angular-api.herokuapp.com) `https:
   </li>
   <li>Livros por Categoria
   
-    https://library-angular-api.herokuapp.com/api/livros/categorias/{categoria_id} ou https://library-angular-api.herokuapp.com/api/livros/search/categorias/{categoria_link}
+    https://library-angular-api.herokuapp.com/api/livros/categorias/{categoria_id}
   </li>
   <li>Todas as Categorias
     
