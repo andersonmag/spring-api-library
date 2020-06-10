@@ -8,6 +8,9 @@ import com.api.library.model.Livro;
 import com.api.library.repository.CategoriaRepository;
 import com.api.library.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,12 +35,14 @@ public class LivroController {
     private LivroRepository livroRepository;
 
     @GetMapping
-    public ResponseEntity<List<Livro>> obterTodosOsLivros() {
-        List<Livro> livros = livroRepository.findAll();
+    public ResponseEntity<List<Livro>> obterTodosOsLivros(
+        @PageableDefault(size = 8) Pageable pageable){
+            
+        Page<Livro> livros = livroRepository.findAll(pageable);
 
         if (livros.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(livros, HttpStatus.OK);
+        return new ResponseEntity<>(livros.getContent(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/search/{link}")
