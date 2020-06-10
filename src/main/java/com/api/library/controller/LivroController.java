@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
+import com.api.library.model.LivroPage;
 import com.api.library.repository.CategoriaRepository;
 import com.api.library.repository.LivroRepository;
+import com.api.library.service.LivroService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,15 +37,16 @@ public class LivroController {
     @Autowired
     private LivroRepository livroRepository;
 
+    @Autowired
+    private LivroService livroService;
+
     @GetMapping
-    public ResponseEntity<List<Livro>> obterTodosOsLivros(
-        @PageableDefault(size = 8) Pageable pageable){
-            
+    public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable) {
         Page<Livro> livros = livroRepository.findAll(pageable);
 
         if (livros.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(livros.getContent(), HttpStatus.OK);
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(livroService.obterTodos(livros));
     }
 
     @GetMapping(value = "/search/{link}")
@@ -76,7 +80,7 @@ public class LivroController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    
+
     @GetMapping(value = "/search/categorias/{link}")
     public ResponseEntity<Categoria> ObterCategoriaPorLink(@PathVariable("link") String link) {
         Optional<Categoria> categoriaOptional = categoriaRepository.findByLink(link);
