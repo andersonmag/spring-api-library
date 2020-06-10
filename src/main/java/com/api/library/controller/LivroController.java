@@ -9,7 +9,6 @@ import com.api.library.model.LivroPage;
 import com.api.library.repository.CategoriaRepository;
 import com.api.library.repository.LivroRepository;
 import com.api.library.service.LivroService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
@@ -41,12 +41,16 @@ public class LivroController {
     private LivroService livroService;
 
     @GetMapping
-    public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable) {
-        Page<Livro> livros = livroRepository.findAll(pageable);
+    public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
+            @RequestParam(name = "q", required = false) String titulo) {
+        Page<Livro> livros = livroService.obterTodos(pageable, titulo);
 
         if (livros.isEmpty())
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(livroService.obterTodos(livros));
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new LivroPage(livros.getPageable().getPageNumber(),
+                                                  livros.getPageable().getPageSize(),
+                                                  livros.getTotalElements(), livros.getTotalPages(),
+                                                  livros.getContent()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/search/{link}")
