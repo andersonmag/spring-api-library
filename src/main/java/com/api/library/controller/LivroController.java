@@ -6,8 +6,7 @@ import java.util.Optional;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.model.LivroPage;
-import com.api.library.repository.CategoriaRepository;
-import com.api.library.repository.LivroRepository;
+import com.api.library.service.CategoriaService;
 import com.api.library.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,30 +31,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class LivroController {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    @Autowired
-    private LivroRepository livroRepository;
-
-    @Autowired
     private LivroService livroService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping
     public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
-            @RequestParam(name = "q", required = false) String titulo) {
+                                                        @RequestParam(name = "q", required = false) String titulo) {
         Page<Livro> livros = livroService.obterTodos(pageable, titulo);
 
         if (livros.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(new LivroPage(livros.getPageable().getPageNumber(),
                                                   livros.getPageable().getPageSize(),
-                                                  livros.getTotalElements(), livros.getTotalPages(),
+                                                  livros.getTotalElements(),
+                                                  livros.getTotalPages(),
                                                   livros.getContent()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/search/{link}")
     public ResponseEntity<Livro> ObterLivroPorLink(@PathVariable("link") String link) {
-        Optional<Livro> livroOptional = livroRepository.findByLink(link);
+        Optional<Livro> livroOptional = livroService.obterPorLink(link);
 
         if (livroOptional.isPresent())
             return new ResponseEntity<>(livroOptional.get(), HttpStatus.OK);
@@ -64,39 +61,30 @@ public class LivroController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Livro> obterLivroPorId(@PathVariable("id") Long id) {
-        Optional<Livro> livroOptional = livroRepository.findById(id);
+        Optional<Livro> livroOptional = livroService.obterPorId(id);
 
         if (livroOptional.isPresent())
             return new ResponseEntity<>(livroOptional.get(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/categorias/{id}")
-    public ResponseEntity<List<Livro>> obterLivrosPorCategoria(@PathVariable("id") Long id) {
-        Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
+    @GetMapping("/categorias/{link}")
+    public ResponseEntity<LivroPage> obterLivrosPorCategoria(@PathVariable("link") String link,
+                                                             @PageableDefault(size = 8) Pageable pageable) {
+        Page<Livro> livros = livroService.obterPorCategoria(categoriaService.obterCategoria(link), pageable);
 
-        if (categoriaOptional.isPresent()) {
-            List<Livro> livros = livroRepository.findByCategoria(categoriaOptional.get());
-
-            if (livros.isEmpty())
-                return ResponseEntity.notFound().build();
-            return new ResponseEntity<List<Livro>>(livros, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping(value = "/search/categorias/{link}")
-    public ResponseEntity<Categoria> ObterCategoriaPorLink(@PathVariable("link") String link) {
-        Optional<Categoria> categoriaOptional = categoriaRepository.findByLink(link);
-
-        if (categoriaOptional.isPresent())
-            return new ResponseEntity<>(categoriaOptional.get(), HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (livros.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new LivroPage(livros.getPageable().getPageNumber(),
+                                                  livros.getPageable().getPageSize(),
+                                                  livros.getTotalElements(),
+                                                  livros.getTotalPages(),
+                                                  livros.getContent()), HttpStatus.OK);
     }
 
     @GetMapping("/categorias")
     public ResponseEntity<List<Categoria>> obterTodasAsCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+        List<Categoria> categorias = categoriaService.obterTodas();
 
         if (categorias.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,29 +94,28 @@ public class LivroController {
     @PostMapping
     public ResponseEntity<Livro> salvarLivro(@RequestBody Livro livro) {
         livro.setDataCriacao(LocalDateTime.now());
-        return new ResponseEntity<>(livroRepository.save(livro), HttpStatus.CREATED);
+        return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Livro> atualizarLivro(@PathVariable("id") Long id, @RequestBody Livro livro) {
-        Optional<Livro> livroOptional = livroRepository.findById(id);
+        Optional<Livro> livroOptional = livroService.obterPorId(id);
 
         if (livroOptional.isPresent()) {
             livro.setId(livroOptional.get().getId());
-            return new ResponseEntity<>(livroRepository.save(livro), HttpStatus.OK);
+            return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Livro> deletarLivro(@PathVariable("id") Long id) {
-        Optional<Livro> livroOptional = livroRepository.findById(id);
+        Optional<Livro> livroOptional = livroService.obterPorId(id);
 
         if (livroOptional.isPresent()) {
-            livroRepository.delete(livroOptional.get());
+            livroService.excluir(livroOptional.get());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 }
