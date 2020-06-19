@@ -1,8 +1,8 @@
 package com.api.library.model;
 
+import java.math.BigDecimal;
 import java.text.Normalizer;
 import java.time.LocalDateTime;
-// import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
+import org.springframework.lang.NonNull;
 
 @Entity
 public class Livro {
@@ -18,20 +22,29 @@ public class Livro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 200, unique = true, nullable = true)
+    @Column(length = 200, unique = false, nullable = true)
+    @NonNull
     private String titulo;
+    @NonNull
     private String autor;
+    @NonNull
     private String editora;
+    @NonNull
+    private BigDecimal preco;
+    private BigDecimal precoAnterior;
     @Lob
     private String descricao;
     private String idioma;
-    @Column(length = 100, nullable = true, unique = true)
+    @Column(length = 100, nullable = false, unique = true)
     private String link;
     private String dataPublicacao;
     private String ImagemURL;
     @OneToOne
     private Categoria categoria;
+    @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
+    @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dataAtualizacao;
 
     public Long getId() {
         return id;
@@ -67,6 +80,22 @@ public class Livro {
 
     public void setEditora(String editora) {
         this.editora = editora;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
+    public BigDecimal getPrecoAnterior() {
+        return precoAnterior;
+    }
+
+    public void setPrecoAnterior(BigDecimal precoAnterior) {
+        this.precoAnterior = precoAnterior;
     }
 
     public String getDescricao() {
@@ -124,4 +153,13 @@ public class Livro {
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
 }
