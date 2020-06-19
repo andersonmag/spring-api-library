@@ -121,7 +121,7 @@ public class LivroController {
             livro.setPrecoAnterior(livro.getPreco());
             livro.setPreco(novoPreco);
 
-            return new ResponseEntity<>(livro, HttpStatus.OK);
+            return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
