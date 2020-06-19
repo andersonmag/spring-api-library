@@ -1,5 +1,6 @@
 package com.api.library.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -103,8 +105,25 @@ public class LivroController {
 
         if (livroOptional.isPresent()) {
             livro.setId(livroOptional.get().getId());
+            livro.setDataAtualizacao(LocalDateTime.now());
             return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping(value = "/{id}/desconto")
+    public ResponseEntity<Livro> inserirDesconto(@PathVariable(name = "id") Long id,
+                                                 @RequestParam(name = "novoPreco", required = true) BigDecimal novoPreco) {
+        Optional<Livro> livroOptional = livroService.obterPorId(id);
+
+        if(livroOptional.isPresent()) {
+            Livro livro = livroOptional.get();
+            livro.setPrecoAnterior(livro.getPreco());
+            livro.setPreco(novoPreco);
+
+            return new ResponseEntity<>(livro, HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
