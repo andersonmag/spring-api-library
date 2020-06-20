@@ -12,7 +12,7 @@ para poder realizar pequenas transformações que podem ter muito impacto no jei
 Expandindo o conceito de imunidade, ganhamos novas formas de cuidar de nós mesmos.', 'Português',
 'https://images-americanas.b2w.io/produtos/01/00/img2/33866/4/33866479_1GG.jpg','voce-e-a-sua-cura' , '01/04/2018', 1, '2020-06-02T15:31:35.650'),
 
-(2, 'Consciência Quântica: Uma nova visão sobre o amor, a morte, e o sentido da vida', 'AMIT GOSWAMI' , 'Goya', '29.99', '25.0' , 
+(2, 'Consciência Quântica: Uma nova visão sobre o amor, a morte, e o sentido da vida', 'AMIT GOSWAMI' , 'Goya', '25.0', '29.99' , 
 'Desde a antiguidade, temas como Deus, a morte e o sentido da vida são contemplados por diversas religiões e, mais recentemente,
 enquadrados pelo materialismo científico. No entanto, as duas visões de mundo parecem incapazes de dar um sentido satisfatório aos 
 fenômenos da nossa existência. Enquanto uma submete o mundo material a regras transmitidas por líderes religiosos que falam em nome
@@ -42,7 +42,7 @@ para matar e destruir. Grandes, rápidos, ferozes e imunes a todos os armamentos
 cidade de Nova Prime, devastando as tropas de Guardiões e desestabilizando a sociedade humana.', 'Português', 
 'https://images-americanas.b2w.io/produtos/imagens/113725999/113726001_1GG.jpg' , 'depois-da-terra-a-fera-perfeita' , '25/04/2013', 2, '2020-06-02T15:31:35.650'),
 
-(4, 'Código Limpo: Habilidades Práticas do Agile Software', 'Robert C. Martin', 'Alta Books', '39.90', '29.99', 'Mesmo um código ruim pode funcionar.
+(4, 'Código Limpo: Habilidades Práticas do Agile Software', 'Robert C. Martin', 'Alta Books', '29.99', '39.90', 'Mesmo um código ruim pode funcionar.
  Mas se ele não for limpo, pode acabar com uma empresa de desenvolvimento. Perdem-se a cada ano horas incontáveis e recursos importantes
 devido a um código mal escrito. Mas não precisa ser assim. O renomado especialista em software, Robert C. Martin, apresenta um paradigma
 revolucionário com Código limpo: Habilidades Práticas do Agile Software. Martin se reuniu com seus colegas do Mentor Object para destilar
@@ -70,7 +70,7 @@ Com base em meio século de experiência nos mais variados ambientes de software
   desafios reais que você enfrentará — aqueles que irão influenciar diretamente o sucesso ou fracasso dos seus projetos.', 'Português', 
 'https://images-americanas.b2w.io/produtos/01/00/img/73492/5/73492585_1GG.jpg' , 'arquitetura-limpa-o-guia-do-artesao-para-estrutura-e-design-de-software' , '25/03/2019', 3, '2020-06-02T17:08:52.233'),
 
-(7, 'Java e Programação Orientada a Objetos: Uma abordagem Didática', 'HELDER GUIMARÃES ARAGÃO', 'HELDER GUIMARÃES ARAGÃO', '39.90', '33.0',
+(7, 'Java e Programação Orientada a Objetos: Uma abordagem Didática', 'HELDER GUIMARÃES ARAGÃO', 'HELDER GUIMARÃES ARAGÃO', '33.0', '39.90',
 'O entendimento da Programação Orientada a Objetos é um constante desafio para os estudantes e profissionais da área de Computação. 
 Os estudantes, geralmente, têm dificuldade em entender as diferenças entre a programação estruturada e a orientada a objetos. Os profissionais,
  mesmo aqueles que possuem alguma experiência com desenvolvimento de software, também encontram dificuldades em modelar e desenvolver um 
