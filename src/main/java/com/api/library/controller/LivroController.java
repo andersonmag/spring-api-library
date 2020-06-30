@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.model.LivroPage;
@@ -62,7 +63,7 @@ public class LivroController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Livro> obterLivroPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<Livro> obterLivroPorId(@Valid @PathVariable("id") Long id) {
         Optional<Livro> livroOptional = livroService.obterPorId(id);
 
         if (livroOptional.isPresent())
@@ -94,7 +95,7 @@ public class LivroController {
     }
 
     @PostMapping
-    public ResponseEntity<Livro> salvarLivro(@RequestBody Livro livro) {
+    public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody Livro livro) {
         livro.setDataCriacao(LocalDateTime.now());
         return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.CREATED);
     }
