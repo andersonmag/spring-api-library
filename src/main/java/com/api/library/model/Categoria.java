@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Categoria {
@@ -13,8 +14,11 @@ public class Categoria {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank
     private String nome;
     private String link;
+
+    public Categoria(){}
 
     public Long getId() {
         return id;
@@ -40,5 +44,11 @@ public class Categoria {
 
     public String getLink() {
         return link;
+    }
+
+    public Categoria(Long id, String nome, String link) {
+        this.id = id;
+        this.nome = nome;
+        this.link = link;
     }
 }

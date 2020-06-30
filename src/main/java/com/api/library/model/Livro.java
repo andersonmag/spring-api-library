@@ -11,8 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.springframework.lang.NonNull;
 
@@ -22,27 +28,44 @@ public class Livro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 200, unique = false, nullable = true)
-    @NonNull
+
+    @Column(length = 200)
+    @NotBlank
     private String titulo;
-    @NonNull
+    
+    @NotBlank
     private String autor;
-    @NonNull
+    
+    @NotBlank
     private String editora;
-    @NonNull
+    
+    @NotBlank
     private BigDecimal preco;
+
     private BigDecimal precoAnterior;
+    
     @Lob
     private String descricao;
+    
+    @NotBlank
     private String idioma;
-    @Column(length = 100, nullable = false, unique = true)
+    
+    @Column(length = 100, unique = true, updatable = false, nullable = true)
     private String link;
+    
+    @NotBlank
     private String dataPublicacao;
+    
+    @NotBlank
     private String ImagemURL;
+    
     @OneToOne
     private Categoria categoria;
+
+    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
+    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
 
