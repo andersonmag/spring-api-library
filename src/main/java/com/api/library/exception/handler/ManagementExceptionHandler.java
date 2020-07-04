@@ -68,7 +68,7 @@ public class ManagementExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex) {
 
         ResponseError error = createResponseError(HttpStatus.BAD_REQUEST, 
-                                                  ex.getCause().getCause().getMessage());
+                                                  ex.getMessage());
         
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
