@@ -106,7 +106,9 @@ public class LivroController {
 
         if (livroOptional.isPresent()) {
             livro.setId(livroOptional.get().getId());
+            livro.setDataCriacao(livroOptional.get().getDataCriacao());
             livro.setDataAtualizacao(LocalDateTime.now());
+            
             return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
