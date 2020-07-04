@@ -2,7 +2,6 @@ package com.api.library.model;
 
 import java.text.Normalizer;
 import java.util.regex.Pattern;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,6 +13,7 @@ public class Categoria {
     @Id
     @GeneratedValue
     private Long id;
+    
     @NotBlank
     private String nome;
     private String link;
