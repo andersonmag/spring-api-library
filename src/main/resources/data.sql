@@ -2,6 +2,10 @@ INSERT INTO CATEGORIA(ID, NOME, LINK) VALUES(1, 'Holística Saúde, Boa Forma e 
                                       (2, 'Ficção científica','ficcao-cientifica'),
                                       (3, 'Computação, Informática e Mídias Digitais','computacao-informatica-e-midias-digitais');
 
+INSERT INTO USUARIO(ID, NOME, EMAIL, SENHA, STATUS) VALUES(1, 'Anderson', 'adn@gmail.com', '123', 1);
+
+INSERT INTO PEDIDO(ID, CODIGO, DATA, VALOR_TOTAL, USUARIO_ID) VALUES(1, 192892, '2020-06-02T15:31:35.650', '19.90', 1);
+
 INSERT INTO Livro(ID, TITULO, AUTOR , EDITORA, PRECO, PRECO_ANTERIOR, DESCRICAO, IDIOMA, IMAGEMURL, LINK, DATA_PUBLICACAO, CATEGORIA_ID, DATA_CRIACAO) 
 VALUES(1, 'Você É A Sua Cura', 'Deepak Chopra', 'Editora Alaúde, Rudolph E. Tanzi', '19.90', null, 'Uma visão holística da medicina, de postura preventiva,
 colocando o leitor como protagonista da própria saúde; - Testes que fazem refletir sobre o estado de saúde que você vivencia agora; 
