@@ -103,4 +103,4 @@ que remetam ao universo geek a partir de filmes, seriados de televisão ou livro
 a Gryphus Editora constatou existir um amplo público formado por leitores jovens adultos, ávidos por novidades desse segmento.', 'Português',
 'https://images-americanas.b2w.io/produtos/01/00/oferta/12682/3/12682322_1GG.jpg' , 'interestelar' , '17/03/2016', 2, '2020-06-02T17:08:52.233');
 
-
+INSERT INTO PEDIDO_LIVROS(PEDIDO_ID, LIVRO_ID) VALUES(1, 1), (1, 2);
