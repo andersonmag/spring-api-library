@@ -2,7 +2,6 @@ package com.api.library.model;
 
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +37,7 @@ public class Usuario implements UserDetails {
     private String senha;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuarios_roles", 
         joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",
          table = "usuario", unique = false),
@@ -47,7 +46,7 @@ public class Usuario implements UserDetails {
     private List<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
 
     @Column(nullable = true)

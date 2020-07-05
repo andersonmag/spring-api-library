@@ -4,12 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -17,24 +20,31 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Pedido {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @JsonProperty(access = Access.READ_ONLY)
+    @Column(unique = true)
     private int codigo;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     @JsonProperty(access = Access.READ_ONLY)
+    @JsonFormat(shape = Shape.STRING)
     private LocalDateTime data;
+
+    private BigDecimal valorTotal;
 
     @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
     private Usuario usuario;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany
+    @JoinTable(name = "pedido_livros",
+               joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id",
+                                         table = "pedido", unique = false),
+               inverseJoinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id",
+                                                table = "livro", unique = false))
     private List<Livro> livros;
-
-    private BigDecimal valorTotal;
 
     public Long getId() {
         return id;
@@ -83,5 +93,4 @@ public class Pedido {
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
-
 }
