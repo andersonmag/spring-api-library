@@ -2,10 +2,13 @@ package com.api.library.model;
 
 import java.text.Normalizer;
 import java.util.regex.Pattern;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Categoria {
@@ -16,6 +19,9 @@ public class Categoria {
     
     @NotBlank
     private String nome;
+
+    @JsonProperty(access = Access.READ_ONLY)
+    @Column(length = 100, unique = true, updatable = false, nullable = true)
     private String link;
 
     public Categoria(){}

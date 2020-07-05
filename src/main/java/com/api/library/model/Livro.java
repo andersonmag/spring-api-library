@@ -45,9 +45,6 @@ public class Livro {
     @NotBlank
     private String idioma;
     
-    @Column(length = 100, unique = true, updatable = false, nullable = true)
-    private String link;
-    
     @NotBlank
     private String dataPublicacao;
     
@@ -56,10 +53,15 @@ public class Livro {
     
     @OneToOne
     private Categoria categoria;
+        
+    @JsonProperty(access = Access.READ_ONLY)
+    @Column(length = 100, unique = true, updatable = false, nullable = true)
+    private String link;
 
     @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
+    
     @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
