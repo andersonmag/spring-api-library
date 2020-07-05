@@ -1,18 +1,11 @@
 package com.api.library.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-
 import javax.validation.Valid;
-
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
-import com.api.library.repository.PedidoRepository;
-import com.api.library.repository.UsuarioRepository;
-import com.api.library.service.PedidoService;
-
+import com.api.library.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,33 +24,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private PedidoService pedidoService;
-
-    @Autowired
-    private PedidoRepository pedidoRepository;
+    private UsuarioService usuarioService;
 
     @GetMapping("/{id}")
-    private ResponseEntity<Usuario> get(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(usuarioRepository.findById(id).get(), HttpStatus.OK);
+    private ResponseEntity<Usuario> obterPorId(@PathVariable("id") Long id) {
+        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
+
+        if (usuarioOptional.isPresent())
+            return new ResponseEntity<>(usuarioOptional.get(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    private ResponseEntity<Pedido> create(@RequestBody @Valid Pedido pedido) {
-        return new ResponseEntity<>(pedidoService.salvar(pedido), HttpStatus.OK);
+    private ResponseEntity<Usuario> salvar(@RequestBody @Valid Usuario usuario) {
+        return new ResponseEntity<>(usuarioService.salvar(usuario), HttpStatus.OK);
     }
 
     @GetMapping
-    private ResponseEntity<List<Pedido>> getAll() {
-        return new ResponseEntity<>(pedidoRepository.findAll(), HttpStatus.OK);
+    private ResponseEntity<List<Usuario>> obterTodos() {
+        return new ResponseEntity<>(usuarioService.obterTodos(), HttpStatus.OK);
     }
-
 
     @PatchMapping("/{id}/status")
     private ResponseEntity<?> mudarStatus(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
 
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
@@ -66,9 +56,18 @@ public class UsuarioController {
             else
                 usuario.setStatus(true);
 
+            usuarioService.salvar(usuario);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/{id}/pedidos")
+    private ResponseEntity<List<Pedido>> obterPedidosUsuario(@PathVariable("id") Long id) {
+        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
+
+        if (usuarioOptional.isPresent())
+            return new ResponseEntity<>(usuarioOptional.get().getPedidos(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
