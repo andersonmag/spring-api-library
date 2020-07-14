@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import javax.validation.Valid;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
@@ -41,16 +42,12 @@ public class LivroController {
 
     @GetMapping
     public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
-                                                        @RequestParam(name = "q", required = false) String titulo) {
+            @RequestParam(name = "q", required = false) String titulo) {
         Page<Livro> livros = livroService.obterTodos(pageable, titulo);
 
         if (livros.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(new LivroPage(livros.getPageable().getPageNumber(),
-                                                  livros.getPageable().getPageSize(),
-                                                  livros.getTotalElements(),
-                                                  livros.getTotalPages(),
-                                                  livros.getContent()), HttpStatus.OK);
+        return new ResponseEntity<>(getLivroPage(livros), HttpStatus.OK);
     }
 
     @GetMapping(value = "/search/{link}")
@@ -73,16 +70,12 @@ public class LivroController {
 
     @GetMapping("/categorias/{link}")
     public ResponseEntity<LivroPage> obterLivrosPorCategoria(@PathVariable("link") String link,
-                                                             @PageableDefault(size = 8) Pageable pageable) {
+            @PageableDefault(size = 8) Pageable pageable) {
         Page<Livro> livros = livroService.obterPorCategoria(categoriaService.obterCategoria(link), pageable);
 
         if (livros.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(new LivroPage(livros.getPageable().getPageNumber(),
-                                                  livros.getPageable().getPageSize(),
-                                                  livros.getTotalElements(),
-                                                  livros.getTotalPages(),
-                                                  livros.getContent()), HttpStatus.OK);
+        return new ResponseEntity<>(getLivroPage(livros), HttpStatus.OK);
     }
 
     @GetMapping("/categorias")
@@ -139,5 +132,10 @@ public class LivroController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    private LivroPage getLivroPage(Page<Livro> livros) {
+        return new LivroPage(livros.getPageable().getPageNumber(), livros.getPageable().getPageSize(),
+                livros.getTotalElements(), livros.getTotalPages(), livros.getContent());
     }
 }
