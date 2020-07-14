@@ -2,7 +2,9 @@ INSERT INTO CATEGORIA(ID, NOME, LINK) VALUES(1, 'Holística Saúde, Boa Forma e 
                                       (2, 'Ficção científica','ficcao-cientifica'),
                                       (3, 'Computação, Informática e Mídias Digitais','computacao-informatica-e-midias-digitais');
 
-INSERT INTO USUARIO(ID, NOME, EMAIL, SENHA, STATUS) VALUES(1, 'Anderson', 'adn@gmail.com', '123', 1);
+INSERT INTO USUARIO(ID, NOME, EMAIL, SENHA, STATUS) VALUES(1, 'Anderson', 'adn@gmail.com', '$2a$10$Hx93oG6m1QwLOcYJFyAOheBTOa7EefgqJ.oXAn2JIzj6DW8Y5lIIW', 1);
+
+INSERT INTO ROLE(ID, NOME) VALUES(1, 'ROLE_USER');
 
 INSERT INTO PEDIDO(ID, CODIGO, DATA, VALOR_TOTAL, USUARIO_ID) VALUES(1, 192892, '2020-06-02T15:31:35.650', '19.90', 1);
 
