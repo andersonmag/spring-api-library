@@ -37,7 +37,7 @@ public class Usuario implements UserDetails {
     private String senha;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", 
         joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",
          table = "usuario", unique = false),
@@ -46,7 +46,7 @@ public class Usuario implements UserDetails {
     private List<Role> roles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Pedido> pedidos;
 
     @Column(nullable = true)
