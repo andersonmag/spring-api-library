@@ -1,5 +1,7 @@
 package com.api.library.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.Address;
 import javax.mail.Authenticator;
@@ -9,8 +11,12 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 @Service
 public class EmailService {
@@ -19,6 +25,9 @@ public class EmailService {
     private String meuEmail;
     @Value("${spring.mail.password}")
     private String senha;
+
+    @Autowired
+    private Configuration config;
 
     public void enviarEmail(String assunto, String emailDestino, String mensagem) throws Exception {
 
@@ -37,16 +46,32 @@ public class EmailService {
         adressSender.setAddress(meuEmail);
 
         Message message = new MimeMessage(session);
+        String pageContent = convertTemplatePageIntoString();
+        // Map<String, Object> model = new HashMap<>();
+        // model.put("Name", "Anderson");
 
         message.setFrom(adressSender);
         message.addRecipients(Message.RecipientType.TO, adressDestination);
         message.setSubject(assunto);
-        message.setText(mensagem);
+        message.setContent(pageContent, "text/html; charset=utf-8");
+        // message.setText(html);
 
         Transport.send(message);
     }
 
+    private String convertTemplatePageIntoString() throws Exception {
+
+        // Map<String, Object> model = new HashMap<>();
+        // model.put("Name", "Anderson");
+
+        Template pageTemplate = config.getTemplate("emailSend.html");
+        String pageContent = FreeMarkerTemplateUtils.processTemplateIntoString(pageTemplate, new HashMap<>());
+
+        return pageContent;
+    }
+
     private Properties getProperties() {
+
         Properties properties = new Properties();
 
         properties.put("mail.smtp.ssl.trust", "*");
@@ -59,4 +84,5 @@ public class EmailService {
 
         return properties;
     }
+
 }
