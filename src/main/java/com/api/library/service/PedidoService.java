@@ -8,16 +8,14 @@ import com.api.library.model.Usuario;
 import com.api.library.repository.PedidoRepository;
 import com.api.library.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+// import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PedidoService {
 
-    @Autowired
     private PedidoRepository pedidoRepository;
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     public Optional<Pedido> obterPorCodigo(int codigo) {
@@ -39,8 +37,8 @@ public class PedidoService {
             }
         } while (codigoRepetido);
 
-        Usuario usuarioPedido = usuarioRepository.findById(pedido.getUsuario().getId())
-                                                        .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
+        Usuario usuarioPedido = usuarioRepository.findById(pedido.getUsuario().getId()).get();
+                                                        // .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado"));
         pedido.setUsuario(usuarioPedido);
         pedido.setCodigo(codigo);
         pedido.setData(LocalDateTime.now());
@@ -58,5 +56,10 @@ public class PedidoService {
         }
 
         return codigo;
+    }
+
+    public PedidoService(PedidoRepository pedidoRepository, UsuarioRepository usuarioRepository) {
+        this.pedidoRepository = pedidoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 }

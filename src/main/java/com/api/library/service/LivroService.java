@@ -1,6 +1,8 @@
 package com.api.library.service;
 
 import java.util.Optional;
+
+import com.api.library.exception.LivroNotFoundException;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.repository.LivroRepository;
@@ -23,15 +25,17 @@ public class LivroService {
     }
 
     public Page<Livro> obterPorCategoria(Categoria categoria, Pageable pageable) {
-       return livroRepository.findByCategoria(categoria, pageable);
+        return livroRepository.findByCategoria(categoria, pageable);
     }
 
-    public Optional<Livro> obterPorLink(String link) {
-       return livroRepository.findByLink(link);
+    public Livro obterPorLink(String link) {
+        return livroRepository.findByLink(link).orElseThrow(() ->
+            new LivroNotFoundException("Livro não encontrado!"));
     }
 
-    public Optional<Livro> obterPorId(Long id) {
-       return livroRepository.findById(id);
+    public Livro obterPorId(Long id) {
+        return livroRepository.findById(id).orElseThrow(() ->
+             new LivroNotFoundException("Livro não encontrado!"));
     }
 
     public Livro salvar(Livro livro) {
