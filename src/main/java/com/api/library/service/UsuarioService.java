@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
     
     public List<Usuario> obterTodos() {
         return this.usuarioRepository.findAll();
@@ -28,4 +31,6 @@ public class UsuarioService {
     public void excluir(Usuario usuario) {
         usuarioRepository.delete(usuario);
     }
+
+
 }
