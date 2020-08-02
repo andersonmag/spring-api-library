@@ -23,7 +23,7 @@ public class Usuario implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -106,6 +106,16 @@ public class Usuario implements UserDetails {
 
     public void setPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public Usuario(String nome, String email, String senha, boolean status) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.status = status;
+    }
+
+    public Usuario() {
     }
 
     @JsonIgnore

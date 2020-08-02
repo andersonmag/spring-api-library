@@ -93,4 +93,15 @@ public class Pedido {
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
+
+    public Pedido(int codigo, LocalDateTime data, BigDecimal valorTotal, Usuario usuario, List<Livro> livros) {
+        this.codigo = codigo;
+        this.data = data;
+        this.valorTotal = valorTotal;
+        this.usuario = usuario;
+        this.livros = livros;
+    }
+
+    public Pedido() {
+    }
 }
