@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
-import com.api.library.service.EmailService;
 import com.api.library.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,44 +20,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @Autowired
-    private EmailService emailService;
-
-    @GetMapping("/recuperar")
-    public ResponseEntity<?> recuperar() throws Exception {
-
-        try {
-            emailService.enviarEmail("Teste de envio",
-                                     "andersondel.dev@gmail.com",
-                                     "Corpo da mensagekm");            
-
-            return ResponseEntity.ok("tudo certo");
-        }
-
-        catch (Exception e) {
-            System.err.println(e);
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
     @GetMapping("/{id}")
     private ResponseEntity<Usuario> obterPorId(@PathVariable("id") Long id) {
         Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-
-        if (usuarioOptional.isPresent())
+        if (usuarioOptional.isPresent()){
             return new ResponseEntity<>(usuarioOptional.get(), HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     private ResponseEntity<Usuario> salvar(@RequestBody @Valid Usuario usuario) {
-        return new ResponseEntity<>(usuarioService.salvar(usuario), HttpStatus.OK);
+        return new ResponseEntity<>(usuarioService.salvar(usuario), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -86,9 +66,9 @@ public class UsuarioController {
     @GetMapping("/{id}/pedidos")
     private ResponseEntity<List<Pedido>> obterPedidosUsuario(@PathVariable("id") Long id) {
         Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-
         if (usuarioOptional.isPresent())
             return new ResponseEntity<>(usuarioOptional.get().getPedidos(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }
