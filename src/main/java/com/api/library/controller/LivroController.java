@@ -10,6 +10,9 @@ import com.api.library.model.LivroPage;
 import com.api.library.service.CategoriaService;
 import com.api.library.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -38,9 +41,11 @@ public class LivroController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @CacheEvict(value = "AllBooksPage", allEntries = true)
+    @CachePut(value = "AllBooksPage")
     @GetMapping
     public ResponseEntity<LivroPage> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
-            @RequestParam(name = "q", required = false) String titulo) {
+            @RequestParam(name = "q", required = false) String titulo) throws Exception {
         Page<Livro> livros = livroService.obterTodos(pageable, titulo);
 
         if (livros.isEmpty())
