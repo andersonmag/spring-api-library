@@ -40,9 +40,9 @@ public class JWTTokenAuthenticationService {
 
             if (email != null) {
 
-                Optional<Usuario> usuaOptional = ApplicationContextLoad
-                            .getApplicationContext().getBean(UsuarioRepository.class)
-                            .findByEmail(email);
+                Optional<Usuario> usuaOptional = ApplicationContextLoad.getApplicationContext()
+                                                                       .getBean(UsuarioRepository.class)
+                                                                       .findByEmail(email);
 
                 if (usuaOptional.isPresent()) {
                     Usuario usuario = usuaOptional.get();
@@ -60,17 +60,21 @@ public class JWTTokenAuthenticationService {
 
     public void getToken(String email, HttpServletResponse response) throws IOException {
 
+        String tokenFinal = gerenerateToken(email);
+
+        response.addHeader(HEADER_STRING, tokenFinal);
+        response.addHeader("Acess-Control-Allow-Origin", "*");
+
+        response.getWriter().write("{\"" + HEADER_STRING + "\": \"" + tokenFinal + "\"}");
+    }
+
+    public String gerenerateToken(String email) {
         String tokenValue = Jwts.builder()
                                 .setSubject(email)
                                 .setIssuedAt(new Date(System.currentTimeMillis()))
                                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                                 .signWith(SignatureAlgorithm.HS512, SK).compact();
 
-        String tokenFinal = TOKEN_PREFIX + " " + tokenValue;
-
-        response.addHeader(HEADER_STRING, tokenFinal);
-        response.addHeader("Acess-Control-Allow-Origin", "*");
-
-        response.getWriter().write("{\"" + HEADER_STRING + "\": \"" + tokenFinal + "\"}");
+        return TOKEN_PREFIX + " " + tokenValue;
     }
 }

@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -36,7 +35,6 @@ public class Usuario implements UserDetails {
     @NotBlank
     private String senha;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", 
         joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",
@@ -45,12 +43,11 @@ public class Usuario implements UserDetails {
          table = "role", unique = false, updatable = false))
     private List<Role> roles;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Pedido> pedidos;
 
     @Column(nullable = true)
-    private boolean status;
+    private boolean status = true;
 
     public Long getId() {
         return id;
@@ -108,53 +105,57 @@ public class Usuario implements UserDetails {
         this.pedidos = pedidos;
     }
 
-    public Usuario(String nome, String email, String senha, boolean status) {
+    public Usuario(Long id, String nome, String email, String senha) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.status = status;
     }
 
     public Usuario() {
     }
 
-    @JsonIgnore
+    public Usuario(String nome, String email) {
+        this.nome = nome;
+        this.email = email;
+    }
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
         return this.senha;
     }
 
-    @JsonIgnore
     @Override
     public String getUsername() {
         return this.email;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return this.status;
