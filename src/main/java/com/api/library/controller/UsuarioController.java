@@ -1,14 +1,21 @@
 package com.api.library.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
+import com.api.library.dto.UsuarioDTO;
+import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
+import com.api.library.service.EmailService;
 import com.api.library.service.UsuarioService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,28 +29,62 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-
+    
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/enviar-email")
+    public ResponseEntity<HttpStatus> enviarEmail() {
+        try {
+            emailService.enviarEmail("Envio de e-mail normal",
+                                     "emaildestino@gmail.com",
+                                      "Esse e-mail é de envio normal.");
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @Scheduled(cron = "0 20 10 1/1 * *")
+    public void agendarEnvioEmail() {
+        System.err.println("Esse e-mail foi agendado para agr: " + LocalDateTime.now());
+    }
+
     @GetMapping("/{id}")
-    private ResponseEntity<Usuario> obterPorId(@PathVariable("id") Long id) {
+    private ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable("id") Long id) {
         Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
+
         if (usuarioOptional.isPresent()){
-            return new ResponseEntity<>(usuarioOptional.get(), HttpStatus.OK);
-        
+            UsuarioResponseDTO usuarioDTO = converterParaUsuarioDTO(usuarioOptional.get());
+            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
         }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    private ResponseEntity<Usuario> salvar(@RequestBody @Valid Usuario usuario) {
-        return new ResponseEntity<>(usuarioService.salvar(usuario), HttpStatus.CREATED);
+    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
+        Usuario usuarioConvertido = converterParaUsuario(usuarioDTO);
+        Usuario usuario = usuarioService.salvar(usuarioConvertido);
+
+        UsuarioResponseDTO usuarioResDTO = modelMapper.map(usuario, UsuarioResponseDTO.class);
+
+        return new ResponseEntity<>(usuarioResDTO, HttpStatus.CREATED);
     }
 
     @GetMapping
-    private ResponseEntity<List<Usuario>> obterTodos() {
-        return new ResponseEntity<>(usuarioService.obterTodos(), HttpStatus.OK);
+    private ResponseEntity<List<UsuarioResponseDTO>> obterTodos() {
+        List<Usuario> usuarios = usuarioService.obterTodosDTO();
+        List<UsuarioResponseDTO> usuariosDTO = converterParaListUsuarioDTO(usuarios);
+
+        return new ResponseEntity<>(usuariosDTO, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/status")
@@ -70,5 +111,19 @@ public class UsuarioController {
             return new ResponseEntity<>(usuarioOptional.get().getPedidos(), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    private UsuarioResponseDTO converterParaUsuarioDTO(Usuario usuario) {
+        return modelMapper.map(usuario, UsuarioResponseDTO.class);
+    }
+
+    private List<UsuarioResponseDTO> converterParaListUsuarioDTO(List<Usuario> usuarios) {
+        return  usuarios.stream().map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
+                                .collect(Collectors.toList());
+    }
+
+    private Usuario converterParaUsuario(UsuarioDTO usuarioDTO) {
+        return new Usuario(usuarioDTO.getNome(), usuarioDTO.getEmail(), usuarioDTO.getSenha());
+    }
+
 
 }
