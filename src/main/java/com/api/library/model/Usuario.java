@@ -120,6 +120,12 @@ public class Usuario implements UserDetails {
         this.email = email;
     }
 
+    public Usuario(Long id, String nome, String email) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+    }
+
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
