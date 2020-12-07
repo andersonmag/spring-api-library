@@ -32,14 +32,12 @@ public class JWTTokenAuthenticationService {
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
-
             String email = Jwts.parser()
                                .setSigningKey(SK)
                                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                                .getBody().getSubject();
 
             if (email != null) {
-
                 Optional<Usuario> usuaOptional = ApplicationContextLoad.getApplicationContext()
                                                                        .getBean(UsuarioRepository.class)
                                                                        .findByEmail(email);
@@ -54,7 +52,7 @@ public class JWTTokenAuthenticationService {
             }
         }
 
-        response.addHeader("Access-Control-Allow-Origin", "*");
+        response = liberacaoCors(response);
         return null;
     }
 
@@ -63,12 +61,30 @@ public class JWTTokenAuthenticationService {
         String tokenFinal = gerenerateToken(email);
 
         response.addHeader(HEADER_STRING, tokenFinal);
-        response.addHeader("Acess-Control-Allow-Origin", "*");
-
+        
+        response = liberacaoCors(response);
+        
         response.getWriter().write("{\"" + HEADER_STRING + "\": \"" + tokenFinal + "\"}");
     }
 
-    public String gerenerateToken(String email) {
+	private HttpServletResponse liberacaoCors(HttpServletResponse response) {
+
+		if (response.getHeader("Access-Control-Allow-Origin") == null) {
+			response.addHeader("Access-Control-Allow-Origin", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Allow-Headers") == null) {
+			response.addHeader("Access-Control-Allow-Headers", "*");
+		}
+		
+		if (response.getHeader("Access-Control-Request-Headers") == null) {
+			response.addHeader("Access-Control-Request-Headers", "*");
+        }
+        
+        return response;
+	}
+
+    private String gerenerateToken(String email) {
         String tokenValue = Jwts.builder()
                                 .setSubject(email)
                                 .setIssuedAt(new Date(System.currentTimeMillis()))
