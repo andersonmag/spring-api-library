@@ -9,8 +9,14 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Categoria {
 
     @Id
@@ -24,18 +30,8 @@ public class Categoria {
     @Column(length = 100, unique = true, updatable = false, nullable = true)
     private String link;
 
-    public Categoria(){}
-
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
     }
 
     public void setNome(String nome) {
@@ -46,15 +42,5 @@ public class Categoria {
         this.link = pattern.matcher(Normalizer.normalize(this.nome, Normalizer.Form.NFD)).replaceAll("");
         this.link = link.toLowerCase().replaceAll("[^a-zZ-Z1-9]", "-");
         this.link = link.replaceAll("--", "-");
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public Categoria(Long id, String nome, String link) {
-        this.id = id;
-        this.nome = nome;
-        this.link = link;
     }
 }
