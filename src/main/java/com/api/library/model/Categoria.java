@@ -11,12 +11,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Categoria {
 
     @Id
@@ -30,13 +28,6 @@ public class Categoria {
     @Column(length = 100, unique = true, updatable = false, nullable = true)
     private String link;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
     public void construirLink() {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         this.link = pattern.matcher(Normalizer.normalize(this.nome, Normalizer.Form.NFD)).replaceAll("");
