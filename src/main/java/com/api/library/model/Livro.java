@@ -90,18 +90,6 @@ public class Livro {
         this.link = link.replaceAll("--", "-");
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public String getEditora() {
-        return editora;
-    }
-
-    public void setEditora(String editora) {
-        this.editora = editora;
-    }
-
     public BigDecimal getPreco() {
         return preco;
     }
@@ -110,61 +98,10 @@ public class Livro {
         this.preco = preco;
     }
 
-    public BigDecimal getPrecoAnterior() {
-        return precoAnterior;
-    }
-
     public void setPrecoAnterior(BigDecimal precoAnterior) {
         this.precoAnterior = precoAnterior;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
-    }
-
-    public String getDataPublicacao() {
-        return dataPublicacao;
-    }
-
-    public void setDataPublicacao(String dataPublicacao) {
-        this.dataPublicacao = dataPublicacao;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public String getImagemURL() {
-        return ImagemURL;
-    }
-
-    public void setImagemURL(String imagemURL) {
-        ImagemURL = imagemURL;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
 
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
@@ -172,10 +109,6 @@ public class Livro {
 
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
     }
 
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {

@@ -7,8 +7,6 @@ import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
 import com.api.library.repository.PedidoRepository;
 import com.api.library.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
