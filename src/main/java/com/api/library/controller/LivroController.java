@@ -54,9 +54,9 @@ public class LivroController {
 
     @GetMapping("/categorias/{link}")
     public ResponseEntity<LivroPage> obterLivrosPorCategoria(@PathVariable("link") String link,
-            @PageableDefault(size = 8) Pageable pageable) {
+                                                             @PageableDefault(size = 8) Pageable pageable) {
         Page<Livro> livros = livroService.obterPorCategoria(categoriaService.obterCategoria(link), pageable);
-                System.err.println(livros.getSize());
+
         if (livros.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(getLivroPage(livros), HttpStatus.OK);

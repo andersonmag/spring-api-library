@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import javax.validation.ConstraintViolationException;
-import com.api.library.exception.LivroNotFoundException;
+import com.api.library.exception.RecursoNaoEncontradoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.http.HttpHeaders;
@@ -32,8 +32,8 @@ public class ManagementExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseError(status, message);
     }
 
-    @ExceptionHandler(LivroNotFoundException.class)
-	public ResponseEntity<Object> handleExceptionLivroNotFound(LivroNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+	public ResponseEntity<Object> handleExceptionLivroNotFound(RecursoNaoEncontradoException ex, WebRequest request) {
 		ResponseError error = createResponseError(HttpStatus.NOT_FOUND, ex.getMessage());
 		
 		return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
