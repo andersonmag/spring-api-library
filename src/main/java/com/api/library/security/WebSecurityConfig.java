@@ -1,7 +1,7 @@
 package com.api.library.security;
 
 import com.api.library.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,12 +13,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+@AllArgsConstructor
 @Configuration
 @EnableWebMvc
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
-    @Autowired
-    private UserDetailsServiceImpl userDetails;
+    private final UserDetailsServiceImpl userDetails;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

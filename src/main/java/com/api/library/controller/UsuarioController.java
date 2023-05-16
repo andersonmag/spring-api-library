@@ -1,43 +1,35 @@
 package com.api.library.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import com.api.library.dto.UsuarioDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
 import com.api.library.service.EmailService;
 import com.api.library.service.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@AllArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
     
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @GetMapping("/enviar-email")
     public ResponseEntity<HttpStatus> enviarEmail() {
@@ -124,6 +116,4 @@ public class UsuarioController {
     private Usuario converterParaUsuario(UsuarioDTO usuarioDTO) {
         return new Usuario(usuarioDTO.getNome(), usuarioDTO.getEmail(), usuarioDTO.getSenha());
     }
-
-
 }

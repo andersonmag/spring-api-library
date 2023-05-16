@@ -12,9 +12,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class PedidoService {
 
-    private PedidoRepository pedidoRepository;
+    private final PedidoRepository pedidoRepository;
 
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+
+    public PedidoService(PedidoRepository pedidoRepository, UsuarioRepository usuarioRepository) {
+        this.pedidoRepository = pedidoRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     public Optional<Pedido> obterPorCodigo(int codigo) {
         return pedidoRepository.findByCodigo(codigo);
@@ -54,10 +59,5 @@ public class PedidoService {
         }
 
         return codigo;
-    }
-
-    public PedidoService(PedidoRepository pedidoRepository, UsuarioRepository usuarioRepository) {
-        this.pedidoRepository = pedidoRepository;
-        this.usuarioRepository = usuarioRepository;
     }
 }
