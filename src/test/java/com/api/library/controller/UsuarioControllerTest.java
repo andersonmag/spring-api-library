@@ -155,12 +155,12 @@ public class UsuarioControllerTest {
     public void obterTodosUsuarios() throws Exception {
 
         Usuario usuario = getUsuario();
-        List<Usuario> usuarios = Arrays.asList(usuario);
+        var usuarios = Arrays.asList(getUsuarioDTO(usuario));
         List<UsuarioResponseDTO> usuariosDTO = Arrays.asList(getUsuarioDTO(usuario));
 
         String usuariosJSON = new ObjectMapper().writeValueAsString(usuariosDTO);
 
-        BDDMockito.given(usuarioService.obterTodosSomenteNomeEmail())
+        BDDMockito.given(usuarioService.obterTodosUsuariosResponseDTO())
                     .willReturn(usuarios);
 
         BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
@@ -182,7 +182,7 @@ public class UsuarioControllerTest {
         // SIMULAÇÃO
 
         BDDMockito.given(usuarioService.obterPorId(id))
-                    .willReturn(Optional.of(usuario));
+                    .willReturn(getUsuarioDTO(usuario));
 
         BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
                     .willReturn(getUsuarioDTO(usuario));
@@ -219,7 +219,7 @@ public class UsuarioControllerTest {
         usuario.setPedidos(Arrays.asList(pedido));
 
         BDDMockito.given(usuarioService.obterPorId(usuario.getId()))
-                    .willReturn(Optional.of(usuario));
+                    .willReturn(getUsuarioDTO(usuario));
 
         this.mockMvc.perform(get(BASE_URL.concat("/" + usuario.getId() + "/pedidos")))
                         .andDo(print())

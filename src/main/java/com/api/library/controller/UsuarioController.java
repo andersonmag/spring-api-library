@@ -1,6 +1,6 @@
 package com.api.library.controller;
 
-import com.api.library.dto.UsuarioDTO;
+import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.service.UsuarioService;
@@ -44,22 +44,22 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     private ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable("id") Long id) {
-        UsuarioResponseDTO usuarioDTO = usuarioService.obterPorId(id);
-        return ResponseEntity.ok(usuarioDTO);
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.obterPorId(id);
+        return ResponseEntity.ok(usuarioResponseDTO);
     }
 
     @PostMapping
-    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioDTO usuarioDTO, UriComponentsBuilder uriBuilder) {
-        UsuarioResponseDTO usuarioResponseDto = usuarioService.salvar(usuarioDTO);
-        UriComponents enderecoUsuarioSalvo = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuarioResponseDto.getId());
+    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioRequest, UriComponentsBuilder uriBuilder) {
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.salvar(usuarioRequest);
+        UriComponents enderecoUsuarioSalvo = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuarioResponseDTO.getId());
 
-        return ResponseEntity.created(enderecoUsuarioSalvo.toUri()).body(usuarioResponseDto);
+        return ResponseEntity.created(enderecoUsuarioSalvo.toUri()).body(usuarioResponseDTO);
     }
 
     @GetMapping
     private ResponseEntity<List<UsuarioResponseDTO>> obterTodos() {
-        List<UsuarioResponseDTO> usuariosDTO = usuarioService.obterTodosSomenteNomeEmail();
-        return ResponseEntity.ok(usuariosDTO);
+        List<UsuarioResponseDTO> usuarios = usuarioService.obterTodosUsuariosResponseDTO();
+        return ResponseEntity.ok(usuarios);
     }
 
 //    @PatchMapping("/{id}/status")

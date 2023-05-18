@@ -1,8 +1,8 @@
 package com.api.library.service;
 
-import com.api.library.dto.UsuarioDTO;
+import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
-import com.api.library.exception.RecursoNaoEncontradoException;
+import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
@@ -28,28 +28,27 @@ public class UsuarioService {
         return this.usuarioRepository.findAll();
     }
 
-    public List<UsuarioResponseDTO> obterTodosSomenteNomeEmail() {
-        List<Usuario> usuarios = usuarioRepository.findAllOnlyEmailAndNome();
-        List<UsuarioResponseDTO> usuariosDTO = converterParaListUsuarioDTO(usuarios);
+    public List<UsuarioResponseDTO> obterTodosUsuariosResponseDTO() {
+        List<Usuario> usuarios = usuarioRepository.findAllSomenteIdEmailNome();
+        List<UsuarioResponseDTO> usuariosDTO = converterParaListUsuarioResponseDTO(usuarios);
 
         return usuariosDTO;
     }
 
     public UsuarioResponseDTO obterPorId(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario não encontrado!"));
+                .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
 
-        UsuarioResponseDTO usuarioDTO = converterParaUsuarioDTO(usuario);
+        UsuarioResponseDTO usuarioDTO = converterParaUsuarioResponseDTO(usuario);
        return usuarioDTO;
     }
 
-    public UsuarioResponseDTO salvar(UsuarioDTO usuarioDto) {
-        Usuario usuarioConvertido = converterParaUsuario(usuarioDto);
-        usuarioConvertido.setSenha(new BCryptPasswordEncoder().encode(usuarioDto.getSenha()));
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioRequestDto) {
+        Usuario usuarioConvertido = converterParaUsuario(usuarioRequestDto);
+        usuarioConvertido.setSenha(new BCryptPasswordEncoder().encode(usuarioRequestDto.getSenha()));
 
-        UsuarioResponseDTO usuarioResDTO = modelMapper.map(usuarioRepository.save(usuarioConvertido), UsuarioResponseDTO.class);
-
-        return usuarioResDTO;
+        UsuarioResponseDTO usuarioResponse = modelMapper.map(usuarioRepository.save(usuarioConvertido), UsuarioResponseDTO.class);
+        return usuarioResponse;
     }
 
     public void excluir(Usuario usuario) {
@@ -57,22 +56,22 @@ public class UsuarioService {
     }
 
 
-    private UsuarioResponseDTO converterParaUsuarioDTO(Usuario usuario) {
+    private UsuarioResponseDTO converterParaUsuarioResponseDTO(Usuario usuario) {
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
-    private List<UsuarioResponseDTO> converterParaListUsuarioDTO(List<Usuario> usuarios) {
+    private List<UsuarioResponseDTO> converterParaListUsuarioResponseDTO(List<Usuario> usuarios) {
         return  usuarios.stream().map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    private Usuario converterParaUsuario(UsuarioDTO usuarioDTO) {
-        return new Usuario(usuarioDTO.getNome(), usuarioDTO.getEmail(), usuarioDTO.getSenha());
+    private Usuario converterParaUsuario(UsuarioRequestDTO usuarioRequestDTO) {
+        return new Usuario(usuarioRequestDTO.getNome(), usuarioRequestDTO.getEmail(), usuarioRequestDTO.getSenha());
     }
 
     public List<Pedido> obterPedidosUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario não encontrado!"));
+                .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
         return usuario.getPedidos();
     }
 }

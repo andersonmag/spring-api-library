@@ -2,7 +2,7 @@ package com.api.library.service;
 
 import java.util.List;
 
-import com.api.library.exception.RecursoNaoEncontradoException;
+import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Categoria;
 import com.api.library.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class CategoriaService {
 
     public Categoria obterCategoria(String link) {
         return categoriaRepository.findByLink(link)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
+                .orElseThrow(() -> new RecursoNotFoundException("Categoria não encontrada"));
     }
 
     public List<Categoria> obterTodas() {

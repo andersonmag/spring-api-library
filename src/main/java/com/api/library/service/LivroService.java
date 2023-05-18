@@ -1,6 +1,6 @@
 package com.api.library.service;
 
-import com.api.library.exception.RecursoNaoEncontradoException;
+import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.repository.LivroRepository;
@@ -32,12 +32,12 @@ public class LivroService {
 
     public Livro obterPorLink(String link) {
         return livroRepository.findByLink(link).orElseThrow(() ->
-                new RecursoNaoEncontradoException("Livro não encontrado!"));
+                new RecursoNotFoundException("Livro não encontrado!"));
     }
 
     public Livro obterPorId(Long id) {
         return livroRepository.findById(id).orElseThrow(() ->
-                new RecursoNaoEncontradoException("Livro não encontrado!"));
+                new RecursoNotFoundException("Livro não encontrado!"));
     }
 
     public Livro atualizar(Long id, Livro livroAlterado) {
