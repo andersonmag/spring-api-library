@@ -3,8 +3,12 @@ package com.api.library.model;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
+
+import com.api.library.dto.UsuarioRequestDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,14 +39,44 @@ public class Usuario implements UserDetails {
          table = "role", unique = true, updatable = false))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("usuario")
     private List<Pedido> pedidos;
 
     private boolean status = true;
 
+    public Usuario(UsuarioRequestDTO usuarioRequestDTO) {
+        BeanUtils.copyProperties(usuarioRequestDTO, this);
+    }
+
+    public Usuario(Long id, String nome, String email) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+    }
+
+    public Usuario(Long id, String nome, String email, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

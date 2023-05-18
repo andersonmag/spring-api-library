@@ -5,7 +5,9 @@ import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
+import com.api.library.repository.PedidoRepository;
 import com.api.library.repository.UsuarioRepository;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,17 +15,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
+    private final PedidoRepository pedidoRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper) {
-        this.usuarioRepository = usuarioRepository;
-        this.modelMapper = modelMapper;
-    }
-    
+
     public List<Usuario> obterTodos() {
         return this.usuarioRepository.findAll();
     }
@@ -66,12 +66,12 @@ public class UsuarioService {
     }
 
     private Usuario converterParaUsuario(UsuarioRequestDTO usuarioRequestDTO) {
-        return new Usuario(usuarioRequestDTO.getNome(), usuarioRequestDTO.getEmail(), usuarioRequestDTO.getSenha());
+        return new Usuario(usuarioRequestDTO);
     }
 
     public List<Pedido> obterPedidosUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
-        return usuario.getPedidos();
+        return pedidoRepository.findByUsuario(usuario);
     }
 }

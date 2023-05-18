@@ -3,17 +3,10 @@ package com.api.library.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -41,15 +34,17 @@ public class Pedido {
 
     private BigDecimal valorTotal;
 
-    @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
+    @ManyToOne(optional = false)
+    @JsonIncludeProperties(value = {"id", "nome"})
     private Usuario usuario;
 
     @OneToMany
     @JoinTable(name = "pedido_livros",
                joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id",
-                                         table = "pedido", unique = false),
+                                         table = "pedido", unique = true),
                inverseJoinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id",
-                                                table = "livro", unique = false))
+                                                table = "livro", unique = true))
+    @JsonIncludeProperties(value = {"id", "titulo", "preco", "link"})
     private List<Livro> livros;
 
     public Pedido(int codigo, LocalDateTime data, BigDecimal valorTotal, Usuario usuario, List<Livro> livros) {

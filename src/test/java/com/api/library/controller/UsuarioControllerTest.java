@@ -216,7 +216,7 @@ public class UsuarioControllerTest {
     public void obterPedidosUsuario() throws Exception {
         Usuario usuario = getUsuario();
         Pedido pedido = getPedido();
-        usuario.setPedidos(Arrays.asList(pedido));
+        usuario.getPedidos().addAll(Arrays.asList(pedido));
 
         BDDMockito.given(usuarioService.obterPorId(usuario.getId()))
                     .willReturn(getUsuarioDTO(usuario));
