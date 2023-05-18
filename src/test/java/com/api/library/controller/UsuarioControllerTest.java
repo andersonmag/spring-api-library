@@ -160,7 +160,7 @@ public class UsuarioControllerTest {
 
         String usuariosJSON = new ObjectMapper().writeValueAsString(usuariosDTO);
 
-        BDDMockito.given(usuarioService.obterTodosDTO())
+        BDDMockito.given(usuarioService.obterTodosSomenteNomeEmail())
                     .willReturn(usuarios);
 
         BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))

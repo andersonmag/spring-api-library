@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class LivroService {
 
@@ -38,11 +40,22 @@ public class LivroService {
                 new RecursoNaoEncontradoException("Livro não encontrado!"));
     }
 
+    public Livro atualizar(Long id, Livro livroAlterado) {
+        Livro livroBuscado = obterPorId(id);
+        livroAlterado.setId(id);
+        livroAlterado.setDataCriacao(livroBuscado.getDataCriacao());
+        livroAlterado.setDataAtualizacao(LocalDateTime.now());
+
+        return salvar(livroAlterado);
+    }
+
     public Livro salvar(Livro livro) {
+        livro.setDataCriacao(LocalDateTime.now());
         return livroRepository.save(livro);
     }
 
-    public void excluir(Livro livro) {
+    public void excluir(Long id) {
+        Livro livro = obterPorId(id);
         livroRepository.delete(livro);
     }
 }
