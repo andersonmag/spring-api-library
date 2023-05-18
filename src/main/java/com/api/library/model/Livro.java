@@ -46,7 +46,6 @@ public class Livro {
     private String ImagemURL;
     
     @OneToOne
-    @Column(nullable = false)
     private Categoria categoria;
         
     @Column(length = 100, unique = true, updatable = false, nullable = false)

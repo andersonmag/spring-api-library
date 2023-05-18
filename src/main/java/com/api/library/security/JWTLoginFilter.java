@@ -23,7 +23,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException {
 
         Usuario usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 

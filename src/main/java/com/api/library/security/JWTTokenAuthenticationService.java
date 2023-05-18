@@ -18,18 +18,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JWTTokenAuthenticationService {
 
-    // configurações iniciais
-    @Value("${expiration-time}")
-    private static long EXPIRATION_TIME = 172800000;
-    @Value("${secret-key}")
-    private static final String SK = "07yu3SFdFVPYck4VLy5lXpAKSHyZF4rgTUbGd2_yhHA1BfCoc0HzUpLryfugxZilnkDNK9aFVgUSKF7NnxyFs14tNFq98GHLfr1mGtqCdA8AU5R1xvKGvQ-SWqAO1a2GBuaYPYTAUY0UierJsv4A3XxdWXh5RTM0olXCkiSnQ6oYfQGiwOaH_XNz0mQ5OaPP5ybYRL5vCschNqX9kr9VVV4p2Tjv1YcDUmFhKQTCVj-8wBEO2Y4brP_fs5b4JX6-3L-BtfQbmr4lELt3rY0YPt5vPrJVZLzAmAQbHDV0rRtpG6Vc1NemuW-bjcbi9pVlEkdhTEqt_CtZZRDbnB0i6w";
+    @Value("${jwt-expiration-time}")
+    private static long TEMPO_EXPIRACAO;
+    @Value("${jwt-secret-key}")
+    private static String SK;
+    @Value("${jwt-token-prefix}")
+    private static String TOKEN_PREFIX;
+    private static final String CABECARIO_TOKEN = "Authorization";
 
-    private static final String HEADER_STRING = "Authorization";
-    private static final String TOKEN_PREFIX = "Bearer";
 
     public Authentication validTokenUser(HttpServletRequest request, HttpServletResponse response) {
 
-        String token = request.getHeader(HEADER_STRING);
+        String token = request.getHeader(CABECARIO_TOKEN);
 
         if (token != null) {
             String email = Jwts.parser()
@@ -57,14 +57,12 @@ public class JWTTokenAuthenticationService {
     }
 
     public void getToken(String email, HttpServletResponse response) throws IOException {
-
         String tokenFinal = gerenerateToken(email);
 
-        response.addHeader(HEADER_STRING, tokenFinal);
-        
+        response.addHeader(CABECARIO_TOKEN, tokenFinal);
         response = liberacaoCors(response);
         
-        response.getWriter().write("{\"" + HEADER_STRING + "\": \"" + tokenFinal + "\"}");
+        response.getWriter().write("{\"" + CABECARIO_TOKEN + "\": \"" + tokenFinal + "\"}");
     }
 
 	private HttpServletResponse liberacaoCors(HttpServletResponse response) {
@@ -88,7 +86,7 @@ public class JWTTokenAuthenticationService {
         String tokenValue = Jwts.builder()
                                 .setSubject(email)
                                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                                .setExpiration(new Date(System.currentTimeMillis() + TEMPO_EXPIRACAO))
                                 .signWith(SignatureAlgorithm.HS512, SK).compact();
 
         return TOKEN_PREFIX + " " + tokenValue;
