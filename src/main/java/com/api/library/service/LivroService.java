@@ -5,6 +5,7 @@ import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.repository.LivroRepository;
+import com.api.library.util.CriadorLink;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,20 +46,18 @@ public class LivroService {
     }
 
     public Livro atualizar(Long id, LivroRequestDTO livroAlterado) {
+        Livro livro = obterPorId(id);
 
-        if(livroRepository.existsById(id)) {
-            throw new RecursoNotFoundException("Livro não encontrado!");
-        }
+        modelMapper.map(livroAlterado, livro);
+        livro.setDataAtualizacao(LocalDateTime.now());
+        livro.setLink(CriadorLink.cria(livro.getTitulo()));
 
-        Livro livroConvertido = modelMapper.map(livroAlterado, Livro.class);
-        livroConvertido.setId(id);
-        livroConvertido.setDataAtualizacao(LocalDateTime.now());
-
-        return livroRepository.save(livroConvertido);
+        return livroRepository.save(livro);
     }
 
     public Livro salvar(LivroRequestDTO livroDTO) {
         Livro livroConvertido = modelMapper.map(livroDTO, Livro.class);
+        livroConvertido.setLink(CriadorLink.cria(livroConvertido.getTitulo()));
         livroConvertido.setDataCriacao(LocalDateTime.now());
         return livroRepository.save(livroConvertido);
     }

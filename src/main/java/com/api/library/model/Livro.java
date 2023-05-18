@@ -1,10 +1,8 @@
 package com.api.library.model;
 
 import java.math.BigDecimal;
-import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +12,10 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Livro {
 
     @Id
@@ -58,45 +58,8 @@ public class Livro {
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-        construirLink();
-    }
-
-    public void construirLink() {
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        this.link = pattern.matcher(Normalizer.normalize(this.titulo, Normalizer.Form.NFD)).replaceAll("");
-        this.link = link.toLowerCase().replaceAll("[^a-zZ-Z1-9]", "-");
-        this.link = link.replaceAll("--", "-");
-    }
-
-    public BigDecimal getPreco() {
-        return preco;
-    }
-
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
-
-    public void setPrecoAnterior(BigDecimal precoAnterior) {
-        this.precoAnterior = precoAnterior;
-    }
-
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public void setDataCriacao(LocalDateTime dataCriacao) {

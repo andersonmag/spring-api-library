@@ -75,8 +75,8 @@ public class LivroController {
     @PostMapping
     public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody LivroRequestDTO livroRequest, UriComponentsBuilder uriBuilder) {
         Livro livroSalvo = livroService.salvar(livroRequest);
-        UriComponents uriComponents = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(livroSalvo);
+        UriComponents enderecoLivroSalvo = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId());
+        return ResponseEntity.created(enderecoLivroSalvo.toUri()).body(livroSalvo);
     }
 
     @CachePut(cacheNames = "livros", key = "#id")
