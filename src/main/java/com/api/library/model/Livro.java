@@ -2,6 +2,7 @@ package com.api.library.model;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
@@ -11,11 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Livro {
@@ -24,45 +22,39 @@ public class Livro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200)
-    @NotBlank
+    @Column(length = 200, nullable = false)
     private String titulo;
-    
-    @NotBlank
+    @Column(nullable = false)
     private String autor;
-    
-    @NotBlank
+    @Column(nullable = false)
     private String editora;
-    
-    @NotBlank
+    @Column(nullable = false)
     private BigDecimal preco;
-
     private BigDecimal precoAnterior;
     
     @Lob
+    @Column(nullable = false)
     private String descricao;
-    
-    @NotBlank
+
+    @Column(nullable = false)
     private String idioma;
-    
-    @NotBlank
-    private String dataPublicacao;
-    
-    @NotBlank
+
+    @Column(nullable = false)
+    private LocalDate dataPublicacao;
+
+    @Column(nullable = false)
     private String ImagemURL;
     
     @OneToOne
+    @Column(nullable = false)
     private Categoria categoria;
         
-    @JsonProperty(access = Access.READ_ONLY)
-    @Column(length = 100, unique = true, updatable = false, nullable = true)
+    @Column(length = 100, unique = true, updatable = false, nullable = false)
     private String link;
 
-    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
     
-    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
 

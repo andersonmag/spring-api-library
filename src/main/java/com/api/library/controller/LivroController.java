@@ -1,5 +1,6 @@
 package com.api.library.controller;
 
+import com.api.library.dto.LivroRequestDTO;
 import com.api.library.dto.LivrosPaginacaoDTO;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
@@ -72,16 +73,16 @@ public class LivroController {
 
     @CachePut(cacheNames = "livros", key = "#result.id")
     @PostMapping
-    public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody Livro livro, UriComponentsBuilder uriBuilder) {
-        Livro livroSalvo = livroService.salvar(livro);
+    public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody LivroRequestDTO livroRequest, UriComponentsBuilder uriBuilder) {
+        Livro livroSalvo = livroService.salvar(livroRequest);
         UriComponents uriComponents = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId());
         return ResponseEntity.created(uriComponents.toUri()).body(livroSalvo);
     }
 
     @CachePut(cacheNames = "livros", key = "#id")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Livro> atualizarLivro(@PathVariable("id") Long id, @RequestBody Livro livro) {
-        Livro livroAlterado = livroService.atualizar(id, livro);
+    public ResponseEntity<Livro> atualizarLivro(@PathVariable("id") Long id, @RequestBody LivroRequestDTO livroRequest) {
+        Livro livroAlterado = livroService.atualizar(id, livroRequest);
         return ResponseEntity.ok(livroAlterado);
     }
 

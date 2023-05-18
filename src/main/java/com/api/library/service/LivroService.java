@@ -1,9 +1,11 @@
 package com.api.library.service;
 
+import com.api.library.dto.LivroRequestDTO;
 import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.repository.LivroRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.time.LocalDateTime;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final ModelMapper modelMapper;
 
-    public LivroService(LivroRepository livroRepository) {
+    public LivroService(LivroRepository livroRepository, ModelMapper modelMapper) {
         this.livroRepository = livroRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Page<Livro> obterTodos(Pageable pageable, String titulo) {
@@ -40,18 +44,23 @@ public class LivroService {
                 new RecursoNotFoundException("Livro não encontrado!"));
     }
 
-    public Livro atualizar(Long id, Livro livroAlterado) {
-        Livro livroBuscado = obterPorId(id);
-        livroAlterado.setId(id);
-        livroAlterado.setDataCriacao(livroBuscado.getDataCriacao());
-        livroAlterado.setDataAtualizacao(LocalDateTime.now());
+    public Livro atualizar(Long id, LivroRequestDTO livroAlterado) {
 
-        return salvar(livroAlterado);
+        if(livroRepository.existsById(id)) {
+            throw new RecursoNotFoundException("Livro não encontrado!");
+        }
+
+        Livro livroConvertido = modelMapper.map(livroAlterado, Livro.class);
+        livroConvertido.setId(id);
+        livroConvertido.setDataAtualizacao(LocalDateTime.now());
+
+        return livroRepository.save(livroConvertido);
     }
 
-    public Livro salvar(Livro livro) {
-        livro.setDataCriacao(LocalDateTime.now());
-        return livroRepository.save(livro);
+    public Livro salvar(LivroRequestDTO livroDTO) {
+        Livro livroConvertido = modelMapper.map(livroDTO, Livro.class);
+        livroConvertido.setDataCriacao(LocalDateTime.now());
+        return livroRepository.save(livroConvertido);
     }
 
     public void excluir(Long id) {
