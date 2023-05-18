@@ -16,4 +16,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT " + "new com.api.library.model.Usuario(u.id, u.nome, u.email) " +
     "FROM " + "Usuario u")
     List<Usuario> findAllSomenteIdEmailNome();
+
+    boolean existsByEmail(String email);
 }

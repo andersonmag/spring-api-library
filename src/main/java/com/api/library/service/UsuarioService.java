@@ -2,6 +2,7 @@ package com.api.library.service;
 
 import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
+import com.api.library.exception.EmailExistenteException;
 import com.api.library.exception.RecursoNotFoundException;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
@@ -44,6 +45,11 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioRequestDto) {
+
+        if(usuarioRepository.existsByEmail(usuarioRequestDto.getEmail())) {
+            throw new EmailExistenteException("Email já cadastrado no sistema!");
+        }
+
         Usuario usuarioConvertido = converterParaUsuario(usuarioRequestDto);
         usuarioConvertido.setSenha(new BCryptPasswordEncoder().encode(usuarioRequestDto.getSenha()));
 
