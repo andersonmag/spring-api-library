@@ -49,6 +49,7 @@ public class LivroService {
         Livro livro = obterPorId(id);
 
         modelMapper.map(livroAlterado, livro);
+        livro.setId(id);
         livro.setDataAtualizacao(LocalDateTime.now());
         livro.setLink(CriadorLink.cria(livro.getTitulo()));
 
