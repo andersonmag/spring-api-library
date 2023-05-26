@@ -9,34 +9,37 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @JsonInclude(value = Include.NON_NULL)
+@Getter
 public class ResponseError {
 
-    private int code;
-    private String error;
-    private String message;
-    @JsonFormat(shape = Shape.STRING)
+    private int codigo;
+    private String erro;
+    private String mensagem;
+    @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
     private LocalDateTime time;
-    private List<Field> fields;
+    private List<Campo> campos;
 
-    public ResponseError(HttpStatus status, String message) {
-        this.code = status.value();
-        this.error = status.getReasonPhrase();
-        this.message = message;
+    public ResponseError(HttpStatus status, String mensagem) {
+        this.codigo = status.value();
+        this.erro = status.getReasonPhrase();
+        this.mensagem = mensagem;
         this.time = LocalDateTime.now();
     }
 
-    @AllArgsConstructor
-    @Getter @Setter
-    public static class Field {
-        private String name;
-        private String message;
+    public ResponseError(HttpStatus status, List<Campo> campos) {
+        this.codigo = status.value();
+        this.erro = status.getReasonPhrase();
+        this.time = LocalDateTime.now();
+        this.campos = campos;
     }
 
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
+    @AllArgsConstructor
+    @Getter
+    public static class Campo {
+        private String nome;
+        private String mensagem;
     }
 }

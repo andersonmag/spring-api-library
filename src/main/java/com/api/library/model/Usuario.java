@@ -2,26 +2,18 @@ package com.api.library.model;
 
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.*;
 
+import com.api.library.dto.UsuarioRequestDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @NoArgsConstructor
-@Getter @Setter
+@Getter
 @Entity
 public class Usuario implements UserDetails {
 
@@ -31,40 +23,28 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false, length = 200)
     private String nome;
 
-    @Email
-    @Column(unique = true, length = 100)
+    @Column(unique = true, length = 100, nullable = false)
     private String email;
-
-    @NotBlank
+    @Column(nullable = false)
     private String senha;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_roles", 
-        joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",
-         table = "usuario", unique = false),
-        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id",
-         table = "role", unique = false, updatable = false))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable(name = "usuario_roles", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "role_id"}, name = "pk_usuario_roles"),
+                joinColumns = @JoinColumn(name = "usuario_id", table = "usuario", referencedColumnName = "id", updatable = false),
+                inverseJoinColumns = @JoinColumn(name = "role_id", table = "role", referencedColumnName = "id", updatable = false))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usuario", cascade = {CascadeType.REMOVE})
+    @JsonIgnoreProperties("usuario")
     private List<Pedido> pedidos;
 
-    @Column(nullable = true)
     private boolean status = true;
 
-    public Usuario(Long id, String nome, String email, String senha) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-    }
-
-    public Usuario(String nome, String email) {
-        this.nome = nome;
-        this.email = email;
+    public Usuario(UsuarioRequestDTO usuarioRequestDTO) {
+        BeanUtils.copyProperties(usuarioRequestDTO, this);
     }
 
     public Usuario(Long id, String nome, String email) {
@@ -73,7 +53,8 @@ public class Usuario implements UserDetails {
         this.email = email;
     }
 
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(Long id, String nome, String email, String senha) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -82,6 +63,18 @@ public class Usuario implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -96,21 +89,21 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return status;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return status;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.status;
+        return status;
     }
 }

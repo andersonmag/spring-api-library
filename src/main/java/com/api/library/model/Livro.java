@@ -1,9 +1,8 @@
 package com.api.library.model;
 
 import java.math.BigDecimal;
-import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,100 +10,101 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
+
+import com.api.library.dto.LivroRequestDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200)
-    @NotBlank
+    @Column(length = 200, nullable = false)
     private String titulo;
-    
-    @NotBlank
+    @Column(nullable = false)
     private String autor;
-    
-    @NotBlank
+    @Column(nullable = false)
     private String editora;
-    
-    @NotBlank
+    @Column(nullable = false)
     private BigDecimal preco;
-
     private BigDecimal precoAnterior;
     
     @Lob
+    @Column(nullable = false)
     private String descricao;
-    
-    @NotBlank
+
+    @Column(nullable = false)
     private String idioma;
-    
-    @NotBlank
-    private String dataPublicacao;
-    
-    @NotBlank
+
+    @Column(nullable = false)
+    private LocalDate dataPublicacao;
+
+    @Column(nullable = false)
     private String ImagemURL;
     
     @OneToOne
     private Categoria categoria;
         
-    @JsonProperty(access = Access.READ_ONLY)
-    @Column(length = 100, unique = true, updatable = false, nullable = true)
+    @Column(length = 100, unique = true, updatable = false, nullable = false)
     private String link;
 
-    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataCriacao;
     
-    @JsonProperty(access = Access.READ_ONLY)
     @JsonFormat(shape = Shape.STRING, pattern="dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataAtualizacao;
 
-    public Long getId() {
-        return id;
+    public Livro(LivroRequestDTO livroRequestDTO) {
+        BeanUtils.copyProperties(livroRequestDTO, this);
+        this.categoria = new Categoria(livroRequestDTO.getIdCategoria(), null, null);
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
-        construirLink();
     }
 
-    public void construirLink() {
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        this.link = pattern.matcher(Normalizer.normalize(this.titulo, Normalizer.Form.NFD)).replaceAll("");
-        this.link = link.toLowerCase().replaceAll("[^a-zZ-Z1-9]", "-");
-        this.link = link.replaceAll("--", "-");
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 
-    public BigDecimal getPreco() {
-        return preco;
+    public void setEditora(String editora) {
+        this.editora = editora;
     }
 
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 
-    public void setPrecoAnterior(BigDecimal precoAnterior) {
-        this.precoAnterior = precoAnterior;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
+    public void setDataPublicacao(LocalDate dataPublicacao) {
+        this.dataPublicacao = dataPublicacao;
+    }
+
+    public void setImagemURL(String imagemURL) {
+        ImagemURL = imagemURL;
     }
 
     public void setDataCriacao(LocalDateTime dataCriacao) {

@@ -1,129 +1,91 @@
 package com.api.library.controller;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
-import com.api.library.dto.UsuarioDTO;
+import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
-import com.api.library.model.Usuario;
-import com.api.library.service.EmailService;
 import com.api.library.service.UsuarioService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.util.List;
+
+@AllArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
     
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+//    private final EmailService emailService;
 
-    @Autowired
-    private EmailService emailService;
-
-    @GetMapping("/enviar-email")
-    public ResponseEntity<HttpStatus> enviarEmail() {
-        try {
-            emailService.enviarEmail("Envio de e-mail normal",
-                                     "emaildestino@gmail.com",
-                                      "Esse e-mail é de envio normal.");
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @Scheduled(cron = "0 20 10 1/1 * *")
-    public void agendarEnvioEmail() {
-        System.err.println("Esse e-mail foi agendado para agr: " + LocalDateTime.now());
-    }
+//    @GetMapping("/enviar-email")
+//    public ResponseEntity<HttpStatus> enviarEmail() {
+//        try {
+//            emailService.enviarEmail("Envio de e-mail normal",
+//                                     "emaildestino@gmail.com",
+//                                      "Esse e-mail é de envio normal.");
+//            return ResponseEntity.ok(HttpStatus.OK);
+//        } catch (Exception e) {
+//            System.err.println(e.getMessage());
+//
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
+//
+//    @Scheduled(cron = "0 20 10 1/1 * *")
+//    public void agendarEnvioEmail() {
+//        System.err.println("Esse e-mail foi agendado para agr: " + LocalDateTime.now());
+//    }
 
     @GetMapping("/{id}")
     private ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-
-        if (usuarioOptional.isPresent()){
-            UsuarioResponseDTO usuarioDTO = converterParaUsuarioDTO(usuarioOptional.get());
-            return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
-        }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.obterPorId(id);
+        return ResponseEntity.ok(usuarioResponseDTO);
     }
 
     @PostMapping
-    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
-        Usuario usuarioConvertido = converterParaUsuario(usuarioDTO);
-        Usuario usuario = usuarioService.salvar(usuarioConvertido);
+    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioRequest, UriComponentsBuilder uriBuilder) {
+        UsuarioResponseDTO usuarioResponseDTO = usuarioService.salvar(usuarioRequest);
+        UriComponents enderecoUsuarioSalvo = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuarioResponseDTO.getId());
 
-        UsuarioResponseDTO usuarioResDTO = modelMapper.map(usuario, UsuarioResponseDTO.class);
-
-        return new ResponseEntity<>(usuarioResDTO, HttpStatus.CREATED);
+        return ResponseEntity.created(enderecoUsuarioSalvo.toUri()).body(usuarioResponseDTO);
     }
 
     @GetMapping
     private ResponseEntity<List<UsuarioResponseDTO>> obterTodos() {
-        List<Usuario> usuarios = usuarioService.obterTodosDTO();
-        List<UsuarioResponseDTO> usuariosDTO = converterParaListUsuarioDTO(usuarios);
-
-        return new ResponseEntity<>(usuariosDTO, HttpStatus.OK);
+        List<UsuarioResponseDTO> usuarios = usuarioService.obterTodosUsuariosResponseDTO();
+        return ResponseEntity.ok(usuarios);
     }
 
-    @PatchMapping("/{id}/status")
-    private ResponseEntity<?> mudarStatus(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-
-        if (usuarioOptional.isPresent()) {
-            Usuario usuario = usuarioOptional.get();
-            if (usuario.isStatus())
-                usuario.setStatus(false);
-            else
-                usuario.setStatus(true);
-
-            usuarioService.salvar(usuario);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+//    @PatchMapping("/{id}/status")
+//    private ResponseEntity<?> mudarStatus(@PathVariable("id") Long id) {
+//        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
+//
+//        if (usuarioOptional.isPresent()) {
+//            Usuario usuario = usuarioOptional.get();
+//            if (usuario.isStatus())
+//                usuario.setStatus(false);
+//            else
+//                usuario.setStatus(true);
+//
+//            usuarioService.salvar(usuario);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
     @GetMapping("/{id}/pedidos")
     private ResponseEntity<List<Pedido>> obterPedidosUsuario(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-        if (usuarioOptional.isPresent())
-            return new ResponseEntity<>(usuarioOptional.get().getPedidos(), HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+        List<Pedido> pedidosUsuario = usuarioService.obterPedidosUsuario(id);
 
-    private UsuarioResponseDTO converterParaUsuarioDTO(Usuario usuario) {
-        return modelMapper.map(usuario, UsuarioResponseDTO.class);
+        if (pedidosUsuario.isEmpty())
+                return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pedidosUsuario);
     }
-
-    private List<UsuarioResponseDTO> converterParaListUsuarioDTO(List<Usuario> usuarios) {
-        return  usuarios.stream().map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
-                                .collect(Collectors.toList());
-    }
-
-    private Usuario converterParaUsuario(UsuarioDTO usuarioDTO) {
-        return new Usuario(usuarioDTO.getNome(), usuarioDTO.getEmail(), usuarioDTO.getSenha());
-    }
-
 
 }

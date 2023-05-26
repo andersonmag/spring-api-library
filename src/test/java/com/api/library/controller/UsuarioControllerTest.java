@@ -1,7 +1,6 @@
 package com.api.library.controller;
 
 import com.api.library.ApplicationContextLoad;
-import com.api.library.dto.UsuarioDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
@@ -10,13 +9,11 @@ import com.api.library.security.WebSecurityConfig;
 import com.api.library.service.EmailService;
 import com.api.library.service.UserDetailsServiceImpl;
 import com.api.library.service.UsuarioService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,21 +25,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -163,12 +155,12 @@ public class UsuarioControllerTest {
     public void obterTodosUsuarios() throws Exception {
 
         Usuario usuario = getUsuario();
-        List<Usuario> usuarios = Arrays.asList(usuario);
+        var usuarios = Arrays.asList(getUsuarioDTO(usuario));
         List<UsuarioResponseDTO> usuariosDTO = Arrays.asList(getUsuarioDTO(usuario));
 
         String usuariosJSON = new ObjectMapper().writeValueAsString(usuariosDTO);
 
-        BDDMockito.given(usuarioService.obterTodosDTO())
+        BDDMockito.given(usuarioService.obterTodosUsuariosResponseDTO())
                     .willReturn(usuarios);
 
         BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
@@ -190,7 +182,7 @@ public class UsuarioControllerTest {
         // SIMULAÇÃO
 
         BDDMockito.given(usuarioService.obterPorId(id))
-                    .willReturn(Optional.of(usuario));
+                    .willReturn(getUsuarioDTO(usuario));
 
         BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
                     .willReturn(getUsuarioDTO(usuario));
@@ -224,10 +216,10 @@ public class UsuarioControllerTest {
     public void obterPedidosUsuario() throws Exception {
         Usuario usuario = getUsuario();
         Pedido pedido = getPedido();
-        usuario.setPedidos(Arrays.asList(pedido));
+        usuario.getPedidos().addAll(Arrays.asList(pedido));
 
         BDDMockito.given(usuarioService.obterPorId(usuario.getId()))
-                    .willReturn(Optional.of(usuario));
+                    .willReturn(getUsuarioDTO(usuario));
 
         this.mockMvc.perform(get(BASE_URL.concat("/" + usuario.getId() + "/pedidos")))
                         .andDo(print())

@@ -1,7 +1,6 @@
 package com.api.library.service;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import javax.mail.Address;
 import javax.mail.Authenticator;
@@ -11,7 +10,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -26,8 +25,11 @@ public class EmailService {
     @Value("${spring.mail.password}")
     private String senha;
 
-    @Autowired
-    private Configuration config;
+    private final Configuration config;
+
+    public EmailService(Configuration config) {
+        this.config = config;
+    }
 
     public void enviarEmail(String assunto, String emailDestino, String mensagem) throws Exception {
 

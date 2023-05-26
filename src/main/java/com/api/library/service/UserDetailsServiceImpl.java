@@ -1,9 +1,7 @@
 package com.api.library.service;
 
-import java.util.Optional;
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,22 +13,20 @@ import org.springframework.stereotype.Service;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    // public UserDetailsServiceImpl(UsuarioRepository usuarioRepository) {
-    //     this.usuarioRepository = usuarioRepository;
-    // }
+     public UserDetailsServiceImpl(UsuarioRepository usuarioRepository) {
+         this.usuarioRepository = usuarioRepository;
+     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado!"));
 
-        if (usuarioOptional.isPresent())
-            return new User(usuarioOptional.get().getEmail(), 
-                            usuarioOptional.get().getPassword(),
-                            usuarioOptional.get().getAuthorities());
-        throw new UsernameNotFoundException("Usuario não encontrado!");
+            return new User(usuario.getEmail(),
+                            usuario.getPassword(),
+                            usuario.getAuthorities());
     }
 
 

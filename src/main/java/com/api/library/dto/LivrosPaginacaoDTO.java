@@ -9,7 +9,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter @Setter
-public class LivroPage {
+public class LivrosPaginacaoDTO {
     private int page;
     private int size;
     private long total_size;

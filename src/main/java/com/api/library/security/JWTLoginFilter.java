@@ -16,14 +16,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    protected JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
+    private final JWTTokenAuthenticationService jwtTokenAuthenticationService;
+
+    protected JWTLoginFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager, JWTTokenAuthenticationService jwtTokenAuthenticationService) {
         super(new AntPathRequestMatcher(defaultFilterProcessesUrl));
+        this.jwtTokenAuthenticationService = jwtTokenAuthenticationService;
         setAuthenticationManager(authenticationManager);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException {
 
         Usuario usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 
@@ -34,8 +37,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-       
-        new JWTTokenAuthenticationService().getToken(authResult.getName(), response);
+
+        jwtTokenAuthenticationService.getToken(authResult.getName(), response);
     }
 
 }
