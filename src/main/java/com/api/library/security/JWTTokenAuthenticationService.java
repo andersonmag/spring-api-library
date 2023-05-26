@@ -19,11 +19,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JWTTokenAuthenticationService {
 
     @Value("${jwt-expiration-time}")
-    private static long TEMPO_EXPIRACAO;
+    private long TEMPO_EXPIRACAO;
     @Value("${jwt-secret-key}")
-    private static String SK;
+    private String SK;
     @Value("${jwt-token-prefix}")
-    private static String TOKEN_PREFIX;
+    private String PREFIX_TOKEN;
     private static final String CABECARIO_TOKEN = "Authorization";
 
 
@@ -34,7 +34,7 @@ public class JWTTokenAuthenticationService {
         if (token != null) {
             String email = Jwts.parser()
                                .setSigningKey(SK)
-                               .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                               .parseClaimsJws(token.replace(PREFIX_TOKEN, ""))
                                .getBody().getSubject();
 
             if (email != null) {
@@ -89,6 +89,6 @@ public class JWTTokenAuthenticationService {
                                 .setExpiration(new Date(System.currentTimeMillis() + TEMPO_EXPIRACAO))
                                 .signWith(SignatureAlgorithm.HS512, SK).compact();
 
-        return TOKEN_PREFIX + " " + tokenValue;
+        return PREFIX_TOKEN + " " + tokenValue;
     }
 }

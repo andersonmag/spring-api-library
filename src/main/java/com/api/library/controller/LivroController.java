@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -30,7 +31,7 @@ public class LivroController {
 
     private final CategoriaService categoriaService;
 
-    @Cacheable(value = "livros", condition = "#titulo != null")
+    @Cacheable(value = "livros", condition = "#titulo == null")
     @GetMapping
     public ResponseEntity<LivrosPaginacaoDTO> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
                                                                  @RequestParam(name = "q", required = false) String titulo) {
@@ -71,12 +72,12 @@ public class LivroController {
         return ResponseEntity.ok(categorias);
     }
 
-    @CachePut(cacheNames = "livros", key = "#result.id")
+    @CachePut(cacheNames = "livros", condition = "")
     @PostMapping
     public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody LivroRequestDTO livroRequest, UriComponentsBuilder uriBuilder) {
         Livro livroSalvo = livroService.salvar(livroRequest);
         UriComponents enderecoLivroSalvo = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId());
-        return ResponseEntity.created(enderecoLivroSalvo.toUri()).body(livroSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", enderecoLivroSalvo.toUriString()).body(livroSalvo);
     }
 
     @CachePut(cacheNames = "livros", key = "#id")
@@ -98,7 +99,7 @@ public class LivroController {
 //    }
 
     @DeleteMapping(value = "/{id}")
-    @CachePut(cacheNames = "livros", condition = "result.statusCodeValue == 204")
+    @CachePut(cacheNames = "livros")
     public ResponseEntity<?> deletarLivro(@PathVariable("id") Long id) {
         livroService.excluir(id);
         return ResponseEntity.noContent().build();

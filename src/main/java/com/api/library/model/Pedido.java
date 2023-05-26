@@ -38,13 +38,10 @@ public class Pedido {
     @JsonIncludeProperties(value = {"id", "nome"})
     private Usuario usuario;
 
-    @OneToMany
-    @JoinTable(name = "pedido_livros",
-               joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id",
-                                         table = "pedido", unique = true),
-               inverseJoinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id",
-                                                table = "livro", unique = true))
-    @JsonIncludeProperties(value = {"id", "titulo", "preco", "link"})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name = "pedido_livros", uniqueConstraints = @UniqueConstraint(columnNames = {"pedido_id", "livro_id"}, name = "pk_pedido_livros"),
+               joinColumns = @JoinColumn(name = "pedido_id", table = "pedido", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "livro_id", table = "livro", referencedColumnName = "id"))
     private List<Livro> livros;
 
     public Pedido(int codigo, LocalDateTime data, BigDecimal valorTotal, Usuario usuario, List<Livro> livros) {

@@ -56,7 +56,7 @@ public class LivroService {
     }
 
     public Livro salvar(LivroRequestDTO livroDTO) {
-        Livro livroConvertido = modelMapper.map(livroDTO, Livro.class);
+        Livro livroConvertido = new Livro(livroDTO);
         livroConvertido.setLink(CriadorLink.cria(livroConvertido.getTitulo()));
         livroConvertido.setDataCriacao(LocalDateTime.now());
         return livroRepository.save(livroConvertido);

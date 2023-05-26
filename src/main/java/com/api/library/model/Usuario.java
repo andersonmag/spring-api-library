@@ -31,15 +31,13 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_roles", 
-        joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",
-         table = "usuario", unique = true),
-        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id",
-         table = "role", unique = true, updatable = false))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinTable(name = "usuario_roles", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "role_id"}, name = "pk_usuario_roles"),
+                joinColumns = @JoinColumn(name = "usuario_id", table = "usuario", referencedColumnName = "id", updatable = false),
+                inverseJoinColumns = @JoinColumn(name = "role_id", table = "role", referencedColumnName = "id", updatable = false))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = {CascadeType.REMOVE})
     @JsonIgnoreProperties("usuario")
     private List<Pedido> pedidos;
 
