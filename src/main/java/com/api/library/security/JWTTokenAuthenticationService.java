@@ -52,7 +52,7 @@ public class JWTTokenAuthenticationService {
             }
         }
 
-        response = liberacaoCors(response);
+        liberaCors(response);
         return null;
     }
 
@@ -60,12 +60,12 @@ public class JWTTokenAuthenticationService {
         String tokenFinal = gerenerateToken(email);
 
         response.addHeader(CABECARIO_TOKEN, tokenFinal);
-        response = liberacaoCors(response);
+        response = liberaCors(response);
         
         response.getWriter().write("{\"" + CABECARIO_TOKEN + "\": \"" + tokenFinal + "\"}");
     }
 
-	private HttpServletResponse liberacaoCors(HttpServletResponse response) {
+	private HttpServletResponse liberaCors(HttpServletResponse response) {
 
 		if (response.getHeader("Access-Control-Allow-Origin") == null) {
 			response.addHeader("Access-Control-Allow-Origin", "*");

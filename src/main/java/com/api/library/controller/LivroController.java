@@ -6,21 +6,26 @@ import com.api.library.model.Categoria;
 import com.api.library.model.Livro;
 import com.api.library.service.CategoriaService;
 import com.api.library.service.LivroService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
 
+
+@Tag(name = "Livros", description = "Endpoins para recursos de livros")
 @AllArgsConstructor
 @CrossOrigin
 @RestController
@@ -31,30 +36,61 @@ public class LivroController {
 
     private final CategoriaService categoriaService;
 
-    @Cacheable(value = "livros", condition = "#titulo == null")
+    @Operation(summary = "Buscar todos os livros")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livros existentes"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!")
+    })
+    @Cacheable(value = "livros", condition = "#filtro == null")
     @GetMapping
-    public ResponseEntity<LivrosPaginacaoDTO> obterTodosOsLivros(@PageableDefault(size = 8) Pageable pageable,
-                                                                 @RequestParam(name = "q", required = false) String titulo) {
-        Page<Livro> livros = livroService.obterTodos(pageable, titulo);
+    public ResponseEntity<LivrosPaginacaoDTO> obterTodosOsLivros(@Parameter(name = "Paginação",
+                                                                            description = "size=customizar quantidade de resultados, page=customizar quantidade de páginas")
+                                                                 @PageableDefault(size = 8) Pageable pageable,
+                                                                 @Parameter(name = "filtro", description = "Titulo para filtrar")
+                                                                 @RequestParam(required = false) String filtro) {
+        Page<Livro> livros = livroService.obterTodos(pageable, filtro);
 
         if (livros.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(convertePaginacaoLivros(livros));
     }
 
+    @Operation(summary = "Buscar livro por Id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livro encontrado"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!")
+    })
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Livro> obterLivroPorId(@Valid @PathVariable("id") Long id) {
+    public ResponseEntity<Livro> obterLivroPorId(
+             @Parameter(description = "Id do livro a buscar")
+             @PathVariable("id") Long id) {
         return ResponseEntity.ok(livroService.obterPorId(id));
     }
 
+    @Operation(summary = "Buscar livro por link",
+               description = "Link é o titulo resumido do livro sem pontuações e espaços")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livro existente"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!")
+    })
     @GetMapping(value = "/link/{link}")
-    public ResponseEntity<Livro> ObterLivroPorLink(@PathVariable("link") String link) {
+    public ResponseEntity<Livro> ObterLivroPorLink(
+            @Parameter(description = "Link do livro a buscar")
+            @PathVariable("link") String link) {
         return ResponseEntity.ok(livroService.obterPorLink(link));
     }
 
+    @Operation(summary ="Buscar todos os livros por link de categoria",
+               description = "Link é o titulo resumido do livro sem pontuações e espaços")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livros existentes"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!")
+    })
     @GetMapping("/categorias/{link}")
-    public ResponseEntity<LivrosPaginacaoDTO> obterLivrosPorCategoria(@PathVariable("link") String link,
-                                                                      @PageableDefault(size = 8) Pageable pageable) {
+    public ResponseEntity<LivrosPaginacaoDTO> obterLivrosPorCategoria(
+              @Parameter(description = "Link da categoria a buscar livros")
+              @PathVariable("link") String link,
+              @PageableDefault(size = 8) Pageable pageable) {
         Categoria categoria = categoriaService.obterCategoria(link);
         Page<Livro> livros = livroService.obterPorCategoria(categoria, pageable);
 
@@ -63,6 +99,11 @@ public class LivroController {
         return ResponseEntity.ok(convertePaginacaoLivros(livros));
     }
 
+    @Operation(summary = "Buscar todas as categorias")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Categorias existentes"),
+            @ApiResponse(responseCode = "404", description = "Nenhuma categoria encontrada!")
+    })
     @GetMapping("/categorias")
     public ResponseEntity<List<Categoria>> obterTodasAsCategorias() {
         List<Categoria> categorias = categoriaService.obterTodas();
@@ -72,17 +113,35 @@ public class LivroController {
         return ResponseEntity.ok(categorias);
     }
 
-    @CachePut(cacheNames = "livros", condition = "")
+    @Operation(summary = "Salvar um livro", description = "Necessita de login com Token")
+    @CachePut(cacheNames = "livros", key = "#id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Livro salvo"),
+            @ApiResponse(responseCode = "400", description = "Erro ao informar dados de livro"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão")
+    })
     @PostMapping
-    public ResponseEntity<Livro> salvarLivro(@Valid @RequestBody LivroRequestDTO livroRequest, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Livro> salvarLivro(
+            @Valid @RequestBody
+            @Parameter(name = "Livro a salvar", description = "Livro com dados a salvar", required = true) LivroRequestDTO livroRequest,
+             UriComponentsBuilder uriBuilder) {
         Livro livroSalvo = livroService.salvar(livroRequest);
-        UriComponents enderecoLivroSalvo = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).header("Location", enderecoLivroSalvo.toUriString()).body(livroSalvo);
+        var enderecoLivroSalvo = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId()).toUri();
+        return ResponseEntity.created(enderecoLivroSalvo).body(livroSalvo);
     }
 
+    @Operation(summary = "Atualizar um livro por Id", description = "Necessita de login com Token")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livro atualizado"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!"),
+            @ApiResponse(responseCode = "400", description = "Erro ao informar dados de livro"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão")
+    })
     @CachePut(cacheNames = "livros", key = "#id")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Livro> atualizarLivro(@PathVariable("id") Long id, @RequestBody LivroRequestDTO livroRequest) {
+    public ResponseEntity<Livro> atualizarLivro(
+            @Parameter(description = "Id do livro") @PathVariable("id") Long id,
+            @Parameter(name = "Livro com alterações") @RequestBody LivroRequestDTO livroRequest) {
         Livro livroAlterado = livroService.atualizar(id, livroRequest);
         return ResponseEntity.ok(livroAlterado);
     }
@@ -98,16 +157,23 @@ public class LivroController {
 //        return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
 //    }
 
+    @Operation(summary = "Deletar um livro por Id", description = "Necessita de login com Token")
     @DeleteMapping(value = "/{id}")
-    @CachePut(cacheNames = "livros")
-    public ResponseEntity<?> deletarLivro(@PathVariable("id") Long id) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Livro removido"),
+            @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão")
+    })
+    @CachePut(cacheNames = "livros", condition = "#result.statusCodeValue == 204")
+    public ResponseEntity<?> deletarLivro(
+            @Parameter(description = "Id do livro a remover")
+            @PathVariable("id") Long id) {
         livroService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     private LivrosPaginacaoDTO convertePaginacaoLivros(Page<Livro> livros) {
-        return new LivrosPaginacaoDTO(livros.getPageable().getPageNumber(), livros.getPageable().getPageSize(),
-                                        livros.getTotalElements(), livros.getTotalPages(), livros.getContent());
+        return new LivrosPaginacaoDTO(livros);
     }
 
 }
