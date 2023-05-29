@@ -1,0 +1,26 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+  jackson:
+    serialization:
+      indent-output: true
+  mail:
+    username: teste
+    password: teste
+  freemarker:
+    template-loader-path: classpath:/templates
+server:
+  servlet:
+    context-path: /api
+
+jwt:
+  expiration-time: 172800000
+  secret-key: 07yu3SFdFVPYck4VLy5lXpAKSHyZF4rgTUbGd2_yhHA1BfCoc0HzUpLryfugxZilnkDNK9aFV
+  token-prefix: Bearer

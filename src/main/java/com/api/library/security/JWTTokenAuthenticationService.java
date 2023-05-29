@@ -18,11 +18,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JWTTokenAuthenticationService {
 
-    @Value("${jwt-expiration-time}")
+    @Value("${jwt.expiration-time}")
     private long TEMPO_EXPIRACAO;
-    @Value("${jwt-secret-key}")
+    @Value("${jwt.secret-key}")
     private String SK;
-    @Value("${jwt-token-prefix}")
+    @Value("${jwt.token-prefix}")
     private String PREFIX_TOKEN;
     private static final String CABECARIO_TOKEN = "Authorization";
 
