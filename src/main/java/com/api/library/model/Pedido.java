@@ -38,7 +38,7 @@ public class Pedido {
     @JsonIncludeProperties(value = {"id", "nome"})
     private Usuario usuario;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "pedido_livros", uniqueConstraints = @UniqueConstraint(columnNames = {"pedido_id", "livro_id"}, name = "pk_pedido_livros"),
                joinColumns = @JoinColumn(name = "pedido_id", table = "pedido", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "livro_id", table = "livro", referencedColumnName = "id"))

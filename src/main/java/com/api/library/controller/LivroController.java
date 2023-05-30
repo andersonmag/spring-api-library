@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
@@ -113,7 +114,8 @@ public class LivroController {
         return ResponseEntity.ok(categorias);
     }
 
-    @Operation(summary = "Salvar um livro", description = "Necessita de login com Token")
+    @Operation(summary = "Salvar um livro")
+    @SecurityRequirement(name = "token-authotization")
     @CachePut(cacheNames = "livros", key = "#id")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Livro salvo"),
@@ -130,7 +132,8 @@ public class LivroController {
         return ResponseEntity.created(enderecoLivroSalvo).body(livroSalvo);
     }
 
-    @Operation(summary = "Atualizar um livro por Id", description = "Necessita de login com Token")
+    @Operation(summary = "Atualizar um livro por Id")
+    @SecurityRequirement(name = "token-authotization")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro atualizado"),
             @ApiResponse(responseCode = "404", description = "Nenhum livro encontrado!"),
@@ -157,7 +160,8 @@ public class LivroController {
 //        return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
 //    }
 
-    @Operation(summary = "Deletar um livro por Id", description = "Necessita de login com Token")
+    @Operation(summary = "Deletar um livro por Id")
+    @SecurityRequirement(name = "token-authotization")
     @DeleteMapping(value = "/{id}")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Livro removido"),

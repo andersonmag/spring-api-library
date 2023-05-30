@@ -2,7 +2,7 @@ package com.api.library.controller;
 
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
-import com.api.library.security.WebSecurityConfig;
+import com.api.library.security.SegurancaWebConfig;
 import com.api.library.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
-@ContextConfiguration(classes = { WebSecurityConfig.class })
+@ContextConfiguration(classes = { SegurancaWebConfig.class })
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class LoginJWTTest {

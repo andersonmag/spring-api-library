@@ -9,25 +9,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
-public class JWTApiAuthentication extends GenericFilterBean {
+@Component
+public class AutenticaJwtTokenFilter extends GenericFilterBean {
 
-    private final JWTTokenAuthenticationService jwtTokenAuthenticationService;
+    private final JwtTokenService jwtTokenService;
 
-    public JWTApiAuthentication(JWTTokenAuthenticationService jwtTokenAuthenticationService) {
-        this.jwtTokenAuthenticationService = jwtTokenAuthenticationService;
+    public AutenticaJwtTokenFilter(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        
-        Authentication authentication = jwtTokenAuthenticationService.validTokenUser((HttpServletRequest) request,
-                                                            (HttpServletResponse) response);
-        
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token =  ((HttpServletRequest) request).getHeader(jwtTokenService.getHeaderToken());
+
+        if(token != null) {
+            Authentication autenticado = jwtTokenService.validaRequestToken(token, (HttpServletResponse) response);
+            SecurityContextHolder.getContext().setAuthentication(autenticado);
+        }
         chain.doFilter(request, response);
     }
-    
 }

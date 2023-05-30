@@ -21,9 +21,9 @@ import java.util.Collections;
 
 @AllArgsConstructor
 @Configuration
-public class WebSecurityConfig {
+public class SegurancaWebConfig {
     
-    private final JWTTokenAuthenticationService jwtTokenAuthenticationService;
+    private final AutenticaJwtTokenFilter autenticaJwtTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,9 +59,7 @@ public class WebSecurityConfig {
             .sessionManagement()
                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                  .and()
-            .addFilterBefore(new JWTLoginFilter("/login", authenticationManager, jwtTokenAuthenticationService),
-                                                 UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JWTApiAuthentication(jwtTokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(autenticaJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
          return http.build();
     }
 

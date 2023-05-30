@@ -1,11 +1,10 @@
 package com.api.library.controller;
 
-import com.api.library.ApplicationContextLoad;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
-import com.api.library.security.WebSecurityConfig;
+import com.api.library.security.SegurancaWebConfig;
 import com.api.library.service.EmailService;
 import com.api.library.service.UserDetailsServiceImpl;
 import com.api.library.service.UsuarioService;
@@ -32,7 +31,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,8 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = UsuarioController.class)
-@ContextConfiguration(classes = { WebSecurityConfig.class, UserDetailsServiceImpl.class, UsuarioController.class,
-        HttpServletRequest.class, HttpServletResponse.class, UsuarioRepository.class, ApplicationContextLoad.class })
+@ContextConfiguration(classes = { SegurancaWebConfig.class, UserDetailsServiceImpl.class, UsuarioController.class,
+        HttpServletRequest.class, HttpServletResponse.class, UsuarioRepository.class })
 @ActiveProfiles("test")
 public class UsuarioControllerTest {
 
