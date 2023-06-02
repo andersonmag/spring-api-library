@@ -4,6 +4,12 @@ import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.model.Pedido;
 import com.api.library.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.util.List;
 
+@Tag(name = "Usuarios", description = "Endpoins para recursos de usuarios")
 @AllArgsConstructor
 @CrossOrigin
 @RestController
@@ -42,20 +49,37 @@ public class UsuarioController {
 //        System.err.println("Esse e-mail foi agendado para agr: " + LocalDateTime.now());
 //    }
 
+    @Operation(summary = "Buscar um usuario por Id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Nenhum usuario encontrado!")
+    })
     @GetMapping("/{id}")
-    private ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable("id") Long id) {
+    private ResponseEntity<UsuarioResponseDTO> obterPorId(@Parameter(description = "Id do usuario a buscar")
+                                                              @PathVariable("id") Long id) {
         UsuarioResponseDTO usuarioResponseDTO = usuarioService.obterPorId(id);
         return ResponseEntity.ok(usuarioResponseDTO);
     }
 
+    @Operation(summary = "Salvar um usuario")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Usuario salvo"),
+            @ApiResponse(responseCode = "400", description = "Erro ao informar dados de usuario"),
+            @ApiResponse(responseCode = "409", description = "Dado de usuario já cadastrado")})
     @PostMapping
-    private ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody @Valid UsuarioRequestDTO usuarioRequest, UriComponentsBuilder uriBuilder) {
+    private ResponseEntity<UsuarioResponseDTO> salvar(@Parameter(name = "Usuario a salvar", description = "Usuario com dados a salvar", required = true)
+                                                          @RequestBody @Valid UsuarioRequestDTO usuarioRequest,
+                                                        UriComponentsBuilder uriBuilder) {
         UsuarioResponseDTO usuarioResponseDTO = usuarioService.salvar(usuarioRequest);
         UriComponents enderecoUsuarioSalvo = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuarioResponseDTO.getId());
 
         return ResponseEntity.created(enderecoUsuarioSalvo.toUri()).body(usuarioResponseDTO);
     }
 
+    @Operation(summary = "Buscar todos os usuarios")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuarios existentes"),
+    })
     @GetMapping
     private ResponseEntity<List<UsuarioResponseDTO>> obterTodos() {
         List<UsuarioResponseDTO> usuarios = usuarioService.obterTodosUsuariosResponseDTO();
@@ -79,6 +103,7 @@ public class UsuarioController {
 //        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //    }
 
+    @Hidden
     @GetMapping("/{id}/pedidos")
     private ResponseEntity<List<Pedido>> obterPedidosUsuario(@PathVariable("id") Long id) {
         List<Pedido> pedidosUsuario = usuarioService.obterPedidosUsuario(id);
@@ -87,5 +112,4 @@ public class UsuarioController {
                 return ResponseEntity.notFound().build();
         return ResponseEntity.ok(pedidosUsuario);
     }
-
 }
