@@ -1,30 +1,47 @@
-# API REST para Gerenciamento de Livraria
+# Library API para Gerenciamento de livraria
+
 
 ## Sobre
-  `API para Gerenciamento de usuarios e recursos para livraria`<br>
-  <p>Aplicação feita em Angular consumindo essa API:
-    
-    https://library-angjs.herokuapp.com
-   </p>
-  
-## Veja Online
+Projeto com foco e tema de gerenciamento de uma livraria.  Recursos da API: <br>
+<li>Armazenamento de Livros</li>
+<li>Controle de acesso de usuarios</li>
+<li>Pedido de livros</li>
+...
 
-Projeto hospedado no [Heroku](https://library-angular-api.herokuapp.com) `https://library-angular-api.herokuapp.com`
-<ul>
-  <li>Lista de Livros
-    
-    https://library-angular-api.herokuapp.com/api/livros
-   </li>
-  <li>Livro por ID/Link  
-    
-    https://library-angular-api.herokuapp.com/api/livros/{livro_id} ou https://library-angular-api.herokuapp.com/api/livros/search/{livro_link}  
-  </li>
-  <li>Livros por Categoria
-  
-    https://library-angular-api.herokuapp.com/api/livros/categorias/{categoria_id}
-  </li>
-  <li>Todas as Categorias
-    
-    https://library-angular-api.herokuapp.com/api/livros/categorias
-  </li>
+## Construido com
+  <ul>
+      <li>Spring(Java)</li>
+      <li>H2 Database e PostgreSQL</li>
+      <li>Swagger</li>
+      <li>JWT Token</li>
+      <li>Cache tool</li>
+...
  </ul>
+
+## Veja online
+
+Projeto hospedado em:`https://spring-api-library-production.up.railway.app/`
+<br>Página para documentação de recursos da API com [Swagger UI](https://spring-api-library-production.up.railway.app/)
+
+## Testar API
+- Para recursos que não precisam de autenticação basta acessar o link pelo seu cliente favorito (Postman, Insomnia, ou o proprio Swagger através do **Try it out**) passando parâmetros caso forem necessarios.
+- Os que precisam de autenticação, basta requisitar via POST o [link de login do projeto](https://spring-api-library-production.up.railway.app/api/login), passando **email** 
+e **senha** no formato _JSON_, dados previamente cadastrados no banco. Podem ser utilizados os dados do exemplo abaixo ou um usuario cadastrado através do recurso de **Salvar um usuario**.
+<br>
+<br>
+   Exemplo de requisição:` {
+    "email": "usuario@mail.com",
+    "senha": "123"
+    }`
+<br>
+<br>
+Com dados corretos será retornado O status `200` e um `token`, utilize nas requisições que precisam de autenticação passando como atributo header com o cabeçario "Authorization", ou até setando o valor do Token gerado(sem o **Bearer**) no `Authorize` do Swagger. Após feita a validação do Token é liberado o acesso.
+
+
+`Seja livre para deixar uma estrela e fazer um Fork desse projeto. Aceito críticas e sugestões sobre o mesmo.`
+
+
+
+
+
+

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@Tag(name = "Login", description = "Endpoint para login")
+@Tag(name = "1. Login", description = "Endpoint para login")
 @AllArgsConstructor
 @CrossOrigin
 @RestController
