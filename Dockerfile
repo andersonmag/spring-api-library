@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x mvnw
-RUN ./mvnw clean package
+RUN apt-get update && apt-get install maven -y
+RUN mvn clean install -DskipTests
 RUN mv target/*.jar target/app.jar
 
 EXPOSE 8080
