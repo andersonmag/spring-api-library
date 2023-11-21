@@ -1,7 +1,6 @@
 package com.api.library.controller;
 
 import com.api.library.dto.UsuarioResponseDTO;
-import com.api.library.model.Pedido;
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
 import com.api.library.security.SegurancaWebConfig;
@@ -27,8 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -209,22 +206,6 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    @DisplayName("Test Obter Pedidos de Usuario com ID do Usuario." + 
-                 " Deve retornar Status(200) e Lista de Pedidos do Usuario.")
-    public void obterPedidosUsuario() throws Exception {
-        Usuario usuario = getUsuario();
-        Pedido pedido = getPedido();
-        usuario.getPedidos().addAll(Arrays.asList(pedido));
-
-        BDDMockito.given(usuarioService.obterPorId(usuario.getId()))
-                    .willReturn(getUsuarioDTO(usuario));
-
-        this.mockMvc.perform(get(BASE_URL.concat("/" + usuario.getId() + "/pedidos")))
-                        .andDo(print())
-                        .andExpect(status().isOk());
-    }
-
-    @Test
     @DisplayName("Test Deve enviar e-mail e retornar Status(200)")
     public void enviarEmail() throws Exception {
 
@@ -234,13 +215,6 @@ public class UsuarioControllerTest {
 
     }
 
-      private Pedido getPedido() {
-          return new Pedido(28239382,
-                            LocalDateTime.now(),
-                            BigDecimal.valueOf(19.90),
-                            null, null);
-    }
-    
     private Usuario getUsuario() {
         return new Usuario(100l, "Anderson Test", "adn@gmail.com",
                  new BCryptPasswordEncoder().encode("123"));

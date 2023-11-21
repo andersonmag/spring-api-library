@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.api.library.dto.UsuarioRequestDTO;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -36,10 +35,6 @@ public class Usuario implements UserDetails {
                 joinColumns = @JoinColumn(name = "usuario_id", table = "usuario", referencedColumnName = "id", updatable = false),
                 inverseJoinColumns = @JoinColumn(name = "role_id", table = "role", referencedColumnName = "id", updatable = false))
     private List<Role> roles;
-
-    @OneToMany(mappedBy = "usuario", cascade = {CascadeType.REMOVE})
-    @JsonIgnoreProperties("usuario")
-    private List<Pedido> pedidos;
 
     private boolean status = true;
 

@@ -2,9 +2,7 @@ package com.api.library.controller;
 
 import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
-import com.api.library.model.Pedido;
 import com.api.library.service.UsuarioService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -102,14 +100,4 @@ public class UsuarioController {
 //        }
 //        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //    }
-
-    @Hidden
-    @GetMapping("/{id}/pedidos")
-    private ResponseEntity<List<Pedido>> obterPedidosUsuario(@PathVariable("id") Long id) {
-        List<Pedido> pedidosUsuario = usuarioService.obterPedidosUsuario(id);
-
-        if (pedidosUsuario.isEmpty())
-                return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(pedidosUsuario);
-    }
 }
