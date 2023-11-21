@@ -3,17 +3,15 @@ package com.api.library.security;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class AutenticaJwtTokenFilter extends GenericFilterBean {
+public class AutenticaJwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
@@ -22,14 +20,13 @@ public class AutenticaJwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        String token =  ((HttpServletRequest) request).getHeader(jwtTokenService.getHeaderToken());
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String token = request.getHeader(jwtTokenService.getHeaderToken());
 
         if(token != null) {
-            Authentication autenticado = jwtTokenService.validaRequestToken(token, (HttpServletResponse) response);
+            Authentication autenticado = jwtTokenService.validaRequestToken(token, response);
             SecurityContextHolder.getContext().setAuthentication(autenticado);
         }
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }
