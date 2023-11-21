@@ -13,5 +13,8 @@ INSERT INTO Livro(TITULO, AUTOR , EDITORA, PRECO, PRECO_ANTERIOR, DESCRICAO, IDI
 INSERT INTO Livro(TITULO, AUTOR , EDITORA, PRECO, PRECO_ANTERIOR, DESCRICAO, IDIOMA, IMAGEMURL, LINK, DATA_PUBLICACAO, CATEGORIA_ID, DATA_CRIACAO) VALUES('Interestelar', 'Jonathan Nolan', 'Gryphus Editora', '49.99', '19.90', '"O FIM DA TERRA NÃO SERÁ O NOSSO FIM". Do aclamado cineasta Christopher Nolan, diretor de A origem (Inception) e da trilogia Batman – O Cavaleiro das Trevas (Batman - The Dark Knight), INTERESTELAR é a crônica de um grupo de exploradores que se aproveita de um recém-descoberto buraco de minhoca para ultrapassar os limites das viagens espaciais tripuladas e assim conquistar as grandes distâncias de uma jornada interestelar. Enquanto viajam, estão em risco o destino do planeta... Terra...e o futuro da raça humana. INTERESTELAR será o primeiro de uma série de livros que o novo selo editorial GRYPHUS GEEK oferecerá a seus leitores. O selo será dedicado à publicação de obras de ficção que remetam ao universo geek a partir de filmes, seriados de televisão ou livros originais. Ao lançar os livros Supernatural, a Gryphus Editora constatou existir um amplo público formado por leitores jovens adultos, ávidos por novidades desse segmento.', 'Português', 'https://images-americanas.b2w.io/produtos/01/00/oferta/12682/3/12682322_1GG.jpg' , 'interestelar' , '2016-03-17', 2, '2020-06-02T17:08:52.233');
 
 INSERT INTO USUARIO(NOME, EMAIL, SENHA, STATUS) VALUES('Usuario Testavel', 'usuario@mail.com', '$2a$10$Hx93oG6m1QwLOcYJFyAOheBTOa7EefgqJ.oXAn2JIzj6DW8Y5lIIW', 1);
-INSERT INTO ROLE(ID, NOME) VALUES(1, 'ROLE_USER');
-INSERT INTO USUARIO_ROLES(USUARIO_ID, ROLE_ID) VALUES(1, 1);
+INSERT INTO ROLE(NOME) VALUES('ROLE_USER');
+INSERT INTO ROLE(NOME) VALUES('ROLE_SELLER');
+INSERT INTO ROLE(NOME) VALUES('ROLE_ADMIN');
+INSERT INTO USUARIO_ROLES(USUARIO_ID, ROLE_ID) VALUES(1, 3);
+INSERT INTO USUARIO_ROLES(USUARIO_ID, ROLE_ID) VALUES(1, 2);

@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -55,7 +54,11 @@ public class SegurancaWebConfig {
                  .disable()
             .authorizeRequests()
                 .antMatchers(HttpMethod.GET).permitAll()
-                .antMatchers(HttpMethod.POST, "/login", "/usuarios").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "/usuarios").anonymous()
+
+                .antMatchers(HttpMethod.POST, "/livros").hasAnyRole("SELLER","ADMIN")
+                .antMatchers(HttpMethod.PUT, "/livros/**").hasAnyRole("SELLER","ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/livros/**").hasAnyRole("SELLER","ADMIN")
                 .anyRequest().authenticated()
                 .and()
             .sessionManagement()

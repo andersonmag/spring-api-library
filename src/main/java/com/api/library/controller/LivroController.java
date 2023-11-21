@@ -116,7 +116,7 @@ public class LivroController {
 
     @Operation(summary = "Salvar um livro")
     @SecurityRequirement(name = "token-authotization")
-    @CachePut(cacheNames = "livros", key = "#id")
+    @CachePut(cacheNames = "livros", key = "#result.body.id")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Livro salvo"),
             @ApiResponse(responseCode = "400", description = "Erro ao informar dados de livro"),
