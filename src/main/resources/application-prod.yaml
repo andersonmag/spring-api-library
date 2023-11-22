@@ -1,10 +1,13 @@
 spring:
-
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
-    hibernate:
-      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    driver-class-name: org.postgresql.Driver
 
 jwt:
-  expiration-time: ${JWT-EXPIRATION-TIME}
-  secret-key: ${JWT-SECRET-KEY}
-  token-prefix: ${JWT-TOKEN-PREFIX}
+  expiration-time: ${JWT_EXPIRATION_TIME}
+  secret-key: ${JWT_SECRET_KEY}
+  token-prefix: ${JWT_TOKEN_PREFIX}
