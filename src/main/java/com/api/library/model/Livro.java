@@ -47,7 +47,7 @@ public class Livro {
     @Column(nullable = false)
     private LocalDate dataPublicacao;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "IMAGEM_URL")
     private String ImagemURL;
     
     @OneToOne

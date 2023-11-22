@@ -9,6 +9,9 @@ spring:
     password: teste
   freemarker:
     template-loader-path: classpath:/templates
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: false
 
 server:
   servlet:
