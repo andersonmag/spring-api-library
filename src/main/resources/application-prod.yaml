@@ -1,0 +1,10 @@
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+jwt:
+  expiration-time: ${JWT-EXPIRATION-TIME}
+  secret-key: ${JWT-SECRET-KEY}
+  token-prefix: ${JWT-TOKEN-PREFIX}
