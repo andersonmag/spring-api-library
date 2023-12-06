@@ -15,7 +15,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Tag(name = "Usuarios", description = "Endpoins para recursos de usuarios")
 @AllArgsConstructor
@@ -25,27 +24,6 @@ import java.util.List;
 public class UsuarioController {
     
     private final UsuarioService usuarioService;
-
-//    private final EmailService emailService;
-
-//    @GetMapping("/enviar-email")
-//    public ResponseEntity<HttpStatus> enviarEmail() {
-//        try {
-//            emailService.enviarEmail("Envio de e-mail normal",
-//                                     "emaildestino@gmail.com",
-//                                      "Esse e-mail é de envio normal.");
-//            return ResponseEntity.ok(HttpStatus.OK);
-//        } catch (Exception e) {
-//            System.err.println(e.getMessage());
-//
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-//
-//    @Scheduled(cron = "0 20 10 1/1 * *")
-//    public void agendarEnvioEmail() {
-//        System.err.println("Esse e-mail foi agendado para agr: " + LocalDateTime.now());
-//    }
 
     @Operation(summary = "Buscar um usuario por Id")
     @ApiResponses({
@@ -73,31 +51,4 @@ public class UsuarioController {
 
         return ResponseEntity.created(enderecoUsuarioSalvo.toUri()).body(usuarioResponseDTO);
     }
-
-    @Operation(summary = "Buscar todos os usuarios")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuarios existentes"),
-    })
-    @GetMapping
-    private ResponseEntity<List<UsuarioResponseDTO>> obterTodos() {
-        List<UsuarioResponseDTO> usuarios = usuarioService.obterTodosUsuariosResponseDTO();
-        return ResponseEntity.ok(usuarios);
-    }
-
-//    @PatchMapping("/{id}/status")
-//    private ResponseEntity<?> mudarStatus(@PathVariable("id") Long id) {
-//        Optional<Usuario> usuarioOptional = usuarioService.obterPorId(id);
-//
-//        if (usuarioOptional.isPresent()) {
-//            Usuario usuario = usuarioOptional.get();
-//            if (usuario.isStatus())
-//                usuario.setStatus(false);
-//            else
-//                usuario.setStatus(true);
-//
-//            usuarioService.salvar(usuario);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 }

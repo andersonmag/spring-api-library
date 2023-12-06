@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmail(String email);
 
-    @Query("SELECT " + "new com.api.library.model.Usuario(u.id, u.nome, u.email) " +
+    @Query("SELECT " + "new com.api.library.model.Usuario(u.id, u.nome, u.email, u.status) " +
     "FROM " + "Usuario u")
     List<Usuario> findAllSomenteIdEmailNome();
 

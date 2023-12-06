@@ -42,10 +42,11 @@ public class Usuario implements UserDetails {
         BeanUtils.copyProperties(usuarioRequestDTO, this);
     }
 
-    public Usuario(Long id, String nome, String email) {
+    public Usuario(Long id, String nome, String email, boolean status) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.status = status;
     }
 
     public Usuario(Long id, String nome, String email, String senha) {
@@ -70,6 +71,10 @@ public class Usuario implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     @Override
