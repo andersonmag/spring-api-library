@@ -43,8 +43,21 @@ public class AdminController {
             @ApiResponse(responseCode = "403", description = "Sem permissão")
     })
     @PatchMapping("/usuarios/{id}/status")
-    private ResponseEntity<?> mudarStatus(@Parameter(description = "Id do usuario") @PathVariable("id") Long id) {
+    private ResponseEntity<?> mudarStatus(@Parameter(description = "Id do usuario", required = true) @PathVariable("id") Long id) {
         usuarioService.mudarStatusUsuario(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Adicionar role a usuario")
+    @SecurityRequirement(name = "token-authotization")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Role adicionada!"),
+            @ApiResponse(responseCode = "403", description = "Sem permissão")
+    })
+    @PutMapping("/usuarios/{id}/roles/{role_id}")
+    private ResponseEntity<?> adicionarRoleUsuario(@Parameter(description = "Id do usuario", required = true) @PathVariable("id") Long usuarioId,
+                                                    @Parameter(description = "Id da role", required = true) @PathVariable("role_id") Long roleId) {
+        usuarioService.adicionarRoleUsuario(usuarioId, roleId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

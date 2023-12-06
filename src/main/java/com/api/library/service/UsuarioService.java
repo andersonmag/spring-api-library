@@ -4,10 +4,14 @@ import com.api.library.dto.UsuarioRequestDTO;
 import com.api.library.dto.UsuarioResponseDTO;
 import com.api.library.exception.EmailExistenteException;
 import com.api.library.exception.RecursoNotFoundException;
+import com.api.library.exception.RoleExistenteUsuarioException;
+import com.api.library.model.Role;
 import com.api.library.model.Usuario;
+import com.api.library.repository.RoleRepository;
 import com.api.library.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
 
@@ -79,6 +84,23 @@ public class UsuarioService {
                 .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
 
         usuario.setStatus(!usuario.isEnabled());
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void adicionarRoleUsuario(Long usuarioId, Long roleId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RecursoNotFoundException("Role não encontrada!"));
+
+        boolean usuarioJaPossui = usuario.getRoles().stream().anyMatch(roleIt -> roleIt.getAuthority().equals(role.getAuthority()));
+        if(usuarioJaPossui) {
+            throw new RoleExistenteUsuarioException("Usuario já possui a role: " + role.getAuthority());
+        }
+
+        usuario.getRoles().add(role);
         usuarioRepository.save(usuario);
     }
 }

@@ -2,6 +2,7 @@ package com.api.library.exception.handler;
 
 import com.api.library.exception.EmailExistenteException;
 import com.api.library.exception.RecursoNotFoundException;
+import com.api.library.exception.RoleExistenteUsuarioException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,7 @@ public class ManagementExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, status);
     }
 
-    @ExceptionHandler({EmailExistenteException.class})
+    @ExceptionHandler({EmailExistenteException.class, RoleExistenteUsuarioException.class})
     protected ResponseEntity<Object> handleExceptionEmailExistente(Exception ex) {
         HttpStatus status = HttpStatus.CONFLICT;
 
