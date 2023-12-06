@@ -2,7 +2,6 @@ package com.api.library.service;
 
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,11 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado!"));
-
-            return new User(usuario.getEmail(),
-                            usuario.getPassword(),
-                            usuario.getAuthorities());
+            return usuario;
     }
-
-
 }

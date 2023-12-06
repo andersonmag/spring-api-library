@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,4 +73,12 @@ public class UsuarioService {
         return new Usuario(usuarioRequestDTO);
     }
 
+    @Transactional
+    public void mudarStatusUsuario(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RecursoNotFoundException("Usuario não encontrado!"));
+
+        usuario.setStatus(!usuario.isEnabled());
+        usuarioRepository.save(usuario);
+    }
 }
