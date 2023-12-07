@@ -149,17 +149,6 @@ public class LivroController {
         return ResponseEntity.ok(livroAlterado);
     }
 
-//    @PatchMapping(value = "/{id}/desconto")
-//    public ResponseEntity<Livro> inserirDesconto(@PathVariable(name = "id") Long id,
-//            @RequestParam(name = "novoPreco", required = true) BigDecimal novoPreco) {
-//        Livro livro = livroService.obterPorId(id);
-//
-//        livro.setPrecoAnterior(livro.getPreco());
-//        livro.setPreco(novoPreco);
-//
-//        return new ResponseEntity<>(livroService.salvar(livro), HttpStatus.OK);
-//    }
-
     @Operation(summary = "Deletar um livro por Id")
     @SecurityRequirement(name = "token-authotization")
     @DeleteMapping(value = "/{id}")
