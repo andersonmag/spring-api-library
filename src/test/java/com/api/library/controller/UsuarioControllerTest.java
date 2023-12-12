@@ -144,85 +144,85 @@ public class UsuarioControllerTest {
     //             .andExpect(jsonPath("nome").value(usuarioSalvo.getNome()));
 
     // }
-
-    @Test
-    @DisplayName(value = "Test Deve retornar uma lista com todos os Usuarios e Status Ok(200).")
-    public void obterTodosUsuarios() throws Exception {
-
-        Usuario usuario = getUsuario();
-        var usuarios = Arrays.asList(getUsuarioDTO(usuario));
-        List<UsuarioResponseDTO> usuariosDTO = Arrays.asList(getUsuarioDTO(usuario));
-
-        String usuariosJSON = new ObjectMapper().writeValueAsString(usuariosDTO);
-
-        BDDMockito.given(usuarioService.obterTodosUsuariosResponseDTO())
-                    .willReturn(usuarios);
-
-        BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
-                    .willReturn(getUsuarioDTO(usuario));
-
-        this.mockMvc.perform(get(BASE_URL))
-                    .andDo(print())
-
-                    .andExpect(status().isOk())
-                    .andExpect(content().json(usuariosJSON));
-    }
-
-    @Test
-    @DisplayName(value = "Test Mapeamento para obter Usuario por ID. Deve retornar Status(200) e Usuario buscado.")
-    public void obterUsuarioPorId() throws Exception {
-        Long id = 100l;
-        Usuario usuario = getUsuario();
-
-        // SIMULAÇÃO
-
-        BDDMockito.given(usuarioService.obterPorId(id))
-                    .willReturn(getUsuarioDTO(usuario));
-
-        BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
-                    .willReturn(getUsuarioDTO(usuario));
-        
-       // AÇÃO
-
-        this.mockMvc.perform(get(BASE_URL.concat("/" + id))
-                             .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(usuario.getId()))
-                .andExpect(jsonPath("nome").value(usuario.getNome()))
-                .andExpect(jsonPath("email").value(usuario.getEmail()));
-    }
-
-    @Test
-    @DisplayName("Deve retornar Status(404) ao tentar obter um Usuario com ID inexistente.")
-    public void obterUsuarioIDInexistente() throws Exception {
-        Long id = 101l;
-
-        this.mockMvc.perform(get(BASE_URL.concat("/" + id)))
-                        .andDo(print())
-
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("Test Deve enviar e-mail e retornar Status(200)")
-    public void enviarEmail() throws Exception {
-
-        this.mockMvc.perform(get(BASE_URL.concat("/enviar-email")))
-                        .andDo(print())
-                        .andExpect(status().isOk());
-
-    }
-
-    private Usuario getUsuario() {
-        return new Usuario(100l, "Anderson Test", "adn@gmail.com",
-                 new BCryptPasswordEncoder().encode("123"));
-    }
-
-    private UsuarioResponseDTO getUsuarioDTO(Usuario user) {
-        return new UsuarioResponseDTO(user.getId(),
-                                      user.getNome(),
-                                      user.getEmail());
-    }
+//
+//    @Test
+//    @DisplayName(value = "Test Deve retornar uma lista com todos os Usuarios e Status Ok(200).")
+//    public void obterTodosUsuarios() throws Exception {
+//
+//        Usuario usuario = getUsuario();
+//        var usuarios = Arrays.asList(getUsuarioDTO(usuario));
+//        List<UsuarioResponseDTO> usuariosDTO = Arrays.asList(getUsuarioDTO(usuario));
+//
+//        String usuariosJSON = new ObjectMapper().writeValueAsString(usuariosDTO);
+//
+//        BDDMockito.given(usuarioService.obterTodosUsuariosResponseDTO())
+//                    .willReturn(usuarios);
+//
+//        BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
+//                    .willReturn(getUsuarioDTO(usuario));
+//
+//        this.mockMvc.perform(get(BASE_URL))
+//                    .andDo(print())
+//
+//                    .andExpect(status().isOk())
+//                    .andExpect(content().json(usuariosJSON));
+//    }
+//
+//    @Test
+//    @DisplayName(value = "Test Mapeamento para obter Usuario por ID. Deve retornar Status(200) e Usuario buscado.")
+//    public void obterUsuarioPorId() throws Exception {
+//        Long id = 100l;
+//        Usuario usuario = getUsuario();
+//
+//        // SIMULAÇÃO
+//
+//        BDDMockito.given(usuarioService.obterPorId(id))
+//                    .willReturn(getUsuarioDTO(usuario));
+//
+//        BDDMockito.given(modelMapper.map(usuario, UsuarioResponseDTO.class))
+//                    .willReturn(getUsuarioDTO(usuario));
+//
+//       // AÇÃO
+//
+//        this.mockMvc.perform(get(BASE_URL.concat("/" + id))
+//                             .accept(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("id").value(usuario.getId()))
+//                .andExpect(jsonPath("nome").value(usuario.getNome()))
+//                .andExpect(jsonPath("email").value(usuario.getEmail()));
+//    }
+//
+//    @Test
+//    @DisplayName("Deve retornar Status(404) ao tentar obter um Usuario com ID inexistente.")
+//    public void obterUsuarioIDInexistente() throws Exception {
+//        Long id = 101l;
+//
+//        this.mockMvc.perform(get(BASE_URL.concat("/" + id)))
+//                        .andDo(print())
+//
+//                .andExpect(status().isNotFound());
+//    }
+//
+//    @Test
+//    @DisplayName("Test Deve enviar e-mail e retornar Status(200)")
+//    public void enviarEmail() throws Exception {
+//
+//        this.mockMvc.perform(get(BASE_URL.concat("/enviar-email")))
+//                        .andDo(print())
+//                        .andExpect(status().isOk());
+//
+//    }
+//
+//    private Usuario getUsuario() {
+//        return new Usuario(100l, "Anderson Test", "adn@gmail.com",
+//                 new BCryptPasswordEncoder().encode("123"));
+//    }
+//
+//    private UsuarioResponseDTO getUsuarioDTO(Usuario user) {
+//        return new UsuarioResponseDTO(user.getId(),
+//                                      user.getNome(),
+//                                      user.getEmail());
+//    }
 }

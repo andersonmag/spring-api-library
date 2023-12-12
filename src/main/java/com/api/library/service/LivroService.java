@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -47,13 +48,25 @@ public class LivroService {
 
     public Livro atualizar(Long id, LivroRequestDTO livroAlterado) {
         Livro livro = obterPorId(id);
+        BigDecimal precoAnterior = livro.getPreco();
 
         modelMapper.map(livroAlterado, livro);
+
+        definePromocaoNovoPreco(livro, precoAnterior, livroAlterado.getPreco());
         livro.setId(id);
         livro.setDataAtualizacao(LocalDateTime.now());
         livro.setLink(CriadorLink.cria(livro.getTitulo()));
 
         return livroRepository.save(livro);
+    }
+
+    private void definePromocaoNovoPreco(Livro livro, BigDecimal precoAnterior, BigDecimal novoPreco) {
+        boolean diminiuPreco = precoAnterior.compareTo(novoPreco) == 1;
+        if(diminiuPreco) {
+            livro.setPrecoAnterior(precoAnterior);
+        } else {
+            livro.setPrecoAnterior(null);
+        }
     }
 
     public Livro salvar(LivroRequestDTO livroDTO) {

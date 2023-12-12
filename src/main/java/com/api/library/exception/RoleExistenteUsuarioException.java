@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class EmailExistenteException extends RuntimeException {
+public class RoleExistenteUsuarioException extends RuntimeException{
 
-    public EmailExistenteException(String message) {
+    public RoleExistenteUsuarioException(String message) {
         super(message);
     }
 

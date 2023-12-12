@@ -91,6 +91,10 @@ public class Livro {
         this.preco = preco;
     }
 
+    public void setPrecoAnterior(BigDecimal precoAnterior) {
+        this.precoAnterior = precoAnterior;
+    }
+
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }

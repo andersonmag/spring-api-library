@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import com.api.library.model.Usuario;
 import com.api.library.repository.UsuarioRepository;
+import io.jsonwebtoken.JwtException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +20,19 @@ public class JwtTokenService {
     private final JwtTokenPropriedades propriedades;
     private final UsuarioRepository usuarioRepository;
 
-    public Authentication validaRequestToken(String token, HttpServletResponse response) {
+    public Authentication validaRequestToken(String token, HttpServletResponse response) throws JwtException {
 
-        String email = Jwts.parser()
-                           .setSigningKey(propriedades.getSecretKey())
-                           .parseClaimsJws(token.replace(propriedades.getTokenPrefix(), ""))
-                           .getBody().getSubject();
+        String email = null;
+
+        try {
+            email = Jwts.parser()
+                    .setSigningKey(propriedades.getSecretKey())
+                    .parseClaimsJws(token.replace(propriedades.getTokenPrefix(), ""))
+                    .getBody().getSubject();
+
+        } catch (JwtException exception) {
+            throw exception;
+        }
 
         if (email != null) {
             Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
@@ -33,8 +41,8 @@ public class JwtTokenService {
                 Usuario usuario = usuarioOptional.get();
 
                 return new UsernamePasswordAuthenticationToken(usuario.getEmail(),
-                                                               usuario.getSenha(),
-                                                               usuario.getAuthorities());
+                        usuario.getSenha(),
+                        usuario.getAuthorities());
             }
         }
 
