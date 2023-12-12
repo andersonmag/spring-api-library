@@ -1,5 +1,7 @@
 package com.api.library.security;
 
+import com.api.library.exception.handler.CustomAcessoNaoPermitidoExceptionHandler;
+import com.api.library.exception.handler.CustomAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,8 @@ public class SegurancaWebConfig {
     
     private final AutenticaJwtTokenFilter autenticaJwtTokenFilter;
     private final UserDetailsService userDetailsService;
+
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,6 +66,10 @@ public class SegurancaWebConfig {
                 .and()
             .sessionManagement()
                  .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                 .and()
+            .exceptionHandling()
+                 .accessDeniedHandler(new CustomAcessoNaoPermitidoExceptionHandler())
+                 .authenticationEntryPoint(authenticationEntryPoint)
                  .and()
             .addFilterBefore(autenticaJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
          return http.build();
